@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+GAME->{Map}->script("UbenSign");
+
+UI->{Main}{OffY} = 30;
+UI->{Main}{OffX} = 17;
+
+GAME->{Map}->script("UbenRiver");
+GAME->narrate(
+  [],
+  1.0,
+  ["Which way does the river really flow?"],
+  8.0,
+  sub { exit }
+);

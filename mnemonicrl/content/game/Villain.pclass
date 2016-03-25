@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+package Game::Stuff::Villain;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Villain");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Villain",
+  Affinity => "VLN",
+  Wielding => "dagger",
+  Carrying => [["webtrap", Qty => 5], ["bombtrap", Qty => 5]],
+  Descr    => "A Villain, as dapper as a gentleman, but with a clear air of malice. Their
+               dark cloak obscures dangerous traps, and their moustache is curled at the
+               ends.",
+
+  Stats => {
+    HP       => 5,
+    HP_Rate  => 1,
+    Str      => 2,
+    Def      => 2,
+    Dext     => 5,
+    ESM      => 4,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.5,
+);
+
+# steal
+# lay traps - specialty how since anyone can?
+# smoke pipe - distract at a distance
+
+42;

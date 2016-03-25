@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+
+UI->{Main}{OffY} = 0;
+UI->{Main}{OffX} = 90;
+
+GAME->narrate(
+  [],
+  2.5,
+  ["and feel the gears turning..."],
+  3.0,
+  sub { exit }
+);

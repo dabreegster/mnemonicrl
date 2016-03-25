@@ -1,0 +1,12 @@
+#!/bin/sh
+
+perl emotionrl $@ 2> log
+if test -s log; then
+  echo "Some bugs occured while you were playing EmotionRL. The log is
+  (obviously) stored in the 'log.' Please post this to rgrd or send to me
+  somehow so I can fix them. If the game abruptly ended, I apologize; it was a
+  slightly more serious bug. Copy the log to a safe location before playing
+  again; your next session will overwrite the log."
+else
+  rm -f log
+fi

@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set(Snow => "Medium");
+
+UI->{Main}{OffY} = 90;
+UI->{Main}{OffX} = 110;
+
+my $heart = GAME->{Templates}{Agent}->derive(Symbol => "*", Color => "Red", Type => "heart");
+my @hearts;
+push @hearts, $heart->new(Map => $map, At => [107, 195]);
+push @hearts, $heart->new(Map => $map, At => [106, 192]);
+push @hearts, $heart->new(Map => $map, At => [108, 191]);
+
+my $cnt = 0;
+$heart->{Methods}{float} = sub {
+  if (++$cnt == 7) {
+    $_->_blitoff foreach @hearts;
+    return "STOP";
+  }
+  $_->w foreach @hearts;
+  return 0.4;
+};
+$heart->schedule(-do => "float", -id => "floaty", -tags => ["map"]);
+
+GAME->narrate(
+  [],
+  0.5,
+  ["there is somebody still waiting to find themselves in the river"],
+  3.5,
+  [],
+  7.5,
+  ["So why is the one person",
+   "who has already found their identity"],
+  4.5,
+  [],
+  1.0,
+  sub { exit }
+);

@@ -1,0 +1,140 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use lib "./src";
+use Roguelike;
+
+# Setup
+my $fast = 0;
+my $pregen = 0;
+foreach my $opt (@ARGV) {
+  $Game->{FastRefresh} = 1 if $opt eq "--nocolor";
+  $fast = 1 if $opt eq "--fast";
+}
+$Game->{MaxDepth} = 20;
+
+# Load stuff.
+$Game->loaditems("Equipment");
+$Game->loadmons("Monsters");
+$Game->loaditems("Items");
+$Game->loadkeymap("Keymap");
+
+# Set up the opening room.
+$Game->addlevel("<opening");
+
+# Add stairs
+$Game->{Levels}[0]{Map}[22][21]{_} = "<";
+render($Game->{Levels}[0]{Map}[22][21]);
+$Game->{Levels}[0]{StairsUp}[0] = [22, 21];
+$Game->{Levels}[0]{Map}[1][21]{_} = ">";
+render($Game->{Levels}[0]{Map}[1][21]);
+$Game->{Levels}[0]{StairsDown}[0] = [1, 21];
+
+# Now Player. We need the map in place.
+$Game->loadmons("Player");
+
+# And items!
+if ($fast) {
+  $Game->{Silence} = 1;
+  $Player->{Inv}->add(
+    $Game->{Content}{"incense"}->new(Mod => 0, Qty => 4)
+  );
+  $Player->{Inv}->add(
+    $Game->{Content}{"tarot card"}->new(Qty => 2)
+  );
+  $Player->{Inv}->add(
+    $Game->{Content}{"trenchcoat"}->new
+  );
+  $Player->{Inv}->add(
+    $Game->{Content}{"rat flail"}->new
+  );
+  $Player->switchweapon;
+  $Player->wear( $Player->{Inv}->get("d") );
+  $Player->go(1, 21);
+  $Game->{Silence} = 0;
+} else {
+  $Game->{Levels}[0]{Map}[20][9]{Inv}->add(
+    $Game->{Content}{"incense"}->new(Mod => 0, Qty => 3)
+  );
+  render($Game->{Levels}[0]{Map}[20][9]);
+  $Game->{Levels}[0]{Map}[15][9]{Inv}->add(
+    $Game->{Content}{"tarot card"}->new(Qty => 2)
+  );
+  render($Game->{Levels}[0]{Map}[15][9]);
+  $Game->{Levels}[0]{Map}[22][33]{Inv}->add(
+    $Game->{Content}{"incense"}->new(Mod => 0)
+  );
+  render($Game->{Levels}[0]{Map}[22][33]);
+  $Game->{Levels}[0]{Map}[15][33]{Inv}->add(
+    $Game->{Content}{"trenchcoat"}->new
+  );
+  render($Game->{Levels}[0]{Map}[15][33]);
+  $Game->{Levels}[0]{Map}[19][27]{Inv}->add(
+    $Game->{Content}{"rat flail"}->new
+  );
+  render($Game->{Levels}[0]{Map}[19][27]);
+
+  # Set the mood... introduction scene!
+  $Game->{UI}->msgbox(0);
+  $Game->{UI}->msgbox(1,
+  "Hazy summer days, endless, just drifting. Constant work on your ambitious
+  Perl roguelike project. Coffee, insomnia, incense. Night and day clashing in
+  one titanic headache. Away from friends, just stranded on this surreal island
+  between two lives. And that constant, throbbing feeling of <Blue>Isometric
+  <Blue>Boredom<black>..."  # Eww, nasty wrapping/color bug...
+  );
+  $Game->{UI}->msgbox(1,
+  "The monotony is nothing more than a distraction. You've thrown your heart
+  into the water many times before, but the river of junior high was always so
+  shallow that it never had far to sink. But at the very end, somehow, it sank
+  into the depths of the ocean. The bubble of blissful beauty beneath the
+  distorted surface soon popped, leaving you to face the terrors of the depths. 
+  Your heart washed up on shore, bruised and beaten."
+  );
+  $Game->{UI}->msgbox(1,
+  "The feverish dreams of agony began, curiously coinciding with the arrival of
+  your new authentic Native American dreamcatcher. Somewhere deep in the depths
+  of your own personal hell, you dropped your heart. This pitiful escape would
+  sicken you, if you could still feel. You need to recover yourself."
+  );
+  $Game->{UI}->msgbox(1,
+  "You waver gently on the stream of conciousness, treading calmly. The serene
+  scene of phospherance above you swirls, emptying into an endless void. You've
+  drifted way past the Lover's Reef, into the dreadful place where you cannot
+  help but to sink into the place where you must face your worst..."
+  );
+  $Game->{UI}->msgbox(1,
+  "Emotion",
+  "A Roguelike.",
+  "By Da-Breegster"
+  );
+  # Now, the instructions.
+  $Game->{UI}->msgbox(1,
+  "<purple>Instructions",
+  "Welcome to EmotionRL, the first demo game made with the PerlRL engine!",
+  "EmotionRL should be pretty easy; I wanted to show off my engine more than I
+   wanted to create a balanced game.",
+  "I'm assuming you're familiar with roguelikes. The summary of the keymap only
+   holds ture if you haven't changed the Keymap file.",
+   "<Green>I highly recommend that you examine all items and monsters, read
+    <Green>all messages, and try out all items and attacks."
+   );
+   $Game->{UI}->msgbox(1,
+  "Movement is done with the vi/nethack keys: <Blue>hjklyubn",
+  "<Blue>Control+P<black> should open up the message log.",
+  "At a screen like this, only space will proceed. At prompts for items, letters
+   work. <Blue>?<black> will bring up a list of relevant items.",
+  "<Blue>,<black> will take an item, <Blue>i<black> brings up inventory,
+  <Blue>d<black> drops, <Blue>;<black> lists current items, <Blue>.<black>
+  idles, <Blue>e<black> eats, <Blue>r<black> reads, <Blue>w<black> wields
+  (weapons only), <Blue>W<black> wears (other equipment), <Blue>T<black>
+  discards equipment, <Blue>><black> and <Blue><<black> descend or ascend,
+  <Blue>v<black> lets you examine an item, <Blue>x<black> allows you to examine 
+  monsters, <Blue>a<black> lets you perform one of your special abilities (which
+  you'll learn every few levels), <Blue>f<black> fires a ranged weapon,
+  and <Blue>Q<black> exits."
+  );
+  $Game->{UI}->msgbox(2);
+}
+
+$Game->start;

@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+# Other 'shoppers'
+GAME->{Templates}{Character}->new(Map => $map, At => [random(37, 83), random(137, 153)], Color => UI->random_color) for 1 .. 30;
+
+GAME->{Player} = GAME->{Templates}{Player}->new(Map => $map, At => [82, 155], Color => "yellow");
+Player->trekpath("content/trailer/scene3.path");
+
+GAME->narrate(
+  [],
+  0.5,
+  ["Meet new people as you explore the shops"],
+  2.5,
+  ["Just be warned that whichever way you choose to go..."],
+  5.0,
+  ["Doesn't always leave you in control of where you end up!"],
+  1.0,
+  sub { exit }
+);

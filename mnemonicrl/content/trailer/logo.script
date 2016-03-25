@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+___SCRIPT OnLoad___
+my $map = shift;
+
+# Visual effects
+UI->eyecandy("snow");
+UI->eyecandy("fire");
+UI->eyecandy("smoke");

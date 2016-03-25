@@ -1,0 +1,26 @@
+This is a partial list of some of the more noticable bugs that I intend to
+remedy soon. Please report anything else you notice, especially errors in the
+log.
+
+If a bug actually halts your game, just try again and kindly report the bug so
+I can fix it.
+
+- Generating a new dungeon sometimes fails in the population stage because the
+  generator runs out of hotspots. I think.
+- The AI sucks. Especially movement.
+- "Your the weapon strikes foo!" isn't exactly correct.
+- It is possible to be trapped in the maze or open area, but this rarely
+  happens.
+- The game is horribly unbalanced.
+- Many of my awesome ideas haven't been implemented yet.
+- Animations for ranged attacks aren't yet implemented.
+- If you shove a baddie with Tears of Rage and it smacks into another baddie...
+  either it'll kill it or an infinite loop will be spawned, depending on
+  whether the first can hurt the second.
+- Populations of monsters and items are not distributed levelly throughout
+  levels.
+- Symbols for things are completely unintuitive. Sorry.
+- Most dungeons have many dead-ends. More connectivity is needed.
+- Attack order is wacky. Failed attempts don't deduct TP, the laughing block
+  kicks in too late...
+- Summoned code bugs just sort of sit there.

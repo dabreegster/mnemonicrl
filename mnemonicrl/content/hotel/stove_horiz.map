@@ -1,0 +1,26 @@
+LAYER1
+##
+##
+..
+##
+LAYER2
+__
+  
+::
+__
+LAYER3
+grey,grey,
+grey,grey,
+white,white,
+grey,grey,
+LAYER4
+$VAR1 = {
+  _Data => {
+    superlight => 1,
+    Effects => {},
+    Toys => [
+    ],
+    MkStairs => [
+    ]
+  }
+};

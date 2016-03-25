@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+
+my $sepia = GAME->{Templates}{Character}->new(Name => "Sepia", Map => $map, At => [58, 17], Color => "cyan");
+
+use PerlRL::Offline;
+PerlRL::Offline::narrate(GAME,
+  [],
+  1.5,
+  ["Did you accidentally recall..."],
+  8.0,
+  ["about choosing to forget?"],
+  15.0,
+  sub { exit }
+);

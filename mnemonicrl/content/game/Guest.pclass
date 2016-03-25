@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+package Game::Stuff::Guest;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Guest");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Hotel Guest",
+  Affinity => "GST",
+  #Wielding => "paperlantern",
+  #Carrying => [["spyglass"], ["utilknife"], ["shorthook"]],
+  Descr    => "A humble guest at a fine hotel. What more could be desired?",
+
+  Stats => {
+    HP       => 6,
+    HP_Rate  => 1,
+    Str      => 3,
+    Def      => 3,
+    Dext     => 3,
+    ESM      => 3,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.1,
+
+  Attacks => {
+    compass => Game::Attack->new(
+      Name     => "compass",
+      LearnAt  => 5,
+      Descr    => "Channel magnetic energy and direct it North.",
+      ESMCost  => 9,
+      Range    => ["custom", sub {
+        my $self = shift;
+        my $target = $self->{Map}->get($self->{Y} - 1, $self->{X});
+        return $target if is_obj($target);
+      }],
+      Lag      => 5,
+      Damage   => sub { random(15, 30) },
+      Paralyze => [3]
+    )
+  }
+);
+
+42;

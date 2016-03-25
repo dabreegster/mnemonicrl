@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+UI->{Main}{OffY} = 29;
+UI->{Main}{OffX} = 30;
+
+GAME->{Templates}{Character}->new(Map => $map, At => [random(41, 44), random(67, 87)], Color => UI->random_color) for 1 .. 20;
+
+GAME->narrate(
+  [],
+  0.5,
+  ["Have a cup at the cafe while you wait for your memories to float by..."],
+  2.5,
+  ["The crowds aren't bad. Just don't discuss how you got to Cyphen; that's taboo..."],
+  3.0,
+  sub { exit }
+);

@@ -1,0 +1,64 @@
+#!/usr/bin/perl
+package Game::Stuff::Historian;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Historian");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Historian",
+  Affinity => "HIS",
+  Wielding => "incensegun",
+  Carrying => [["incense", Qty => 15]],
+  Descr    => "Don't discount a Historian as a spacey dreamer; they seem to have a better
+               hold on the flow of time and memory than most. Their appearance is vague,
+               dusty, almost ghost-like. ",
+
+  Stats => {
+    HP       => 6,
+    HP_Rate  => 1,
+    Str      => 3,
+    Def      => 1,
+    Dext     => 4,
+    ESM      => 4,
+    ESM_Rate => 2
+  },
+  Speed     => 1,
+  ExpCurve  => 1.3,
+
+  Attacks => {
+    heal => Game::Attack->new(
+      Name    => "heal",
+      LearnAt => 3,
+      Descr   => "Light up a few sticks of incense and relax.",
+      ESMCost => 10,
+      Range   => ["custom", sub { shift }],
+      Lag     => 6,
+      Check   => sub {
+        my $self = shift;
+        my ($src) = $self->findinv("incense");
+        return STOP("You need at least 3 incense sticks.") unless $src and $src->{Qty} >= 3;
+      },
+      After   => sub {
+        my ($attack, $heap, $self) = @_;
+        $self->{HP}->mod($self->{HP}->value + random(10, 20));
+      },
+      Msg     => "[subj] heals."
+    )
+  }
+);
+
+# abilities:
+# evoke book pages, pagemaster style
+# evoke magic toems
+# burn ability for plain incense
+# electric sheep dream
+
+# to ascend, repress regression.. dont assimilate and level up, have to die and undo it
+
+42;

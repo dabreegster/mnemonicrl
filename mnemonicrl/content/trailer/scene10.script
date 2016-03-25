@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Medium");
+
+UI->{Main}{OffY} = 65;
+UI->{Main}{OffX} = 61;
+
+my $cnt = 0;
+
+GAME->narrate(
+  [],
+  0.2,
+  ["And why is Cyphen, the Land of Nowhere,"],
+  2.5,
+  sub {
+    $cnt = 2
+  },
+  0,
+  ["sometimes... not?"],
+  3.5,
+  sub { exit }
+);
+
+# Flickering sign
+GAME->schedule(
+  -id   => "flicker",
+  -tags => ["map"],
+  -do   => sub {
+    if ($cnt == 2) {
+      GAME->{Map}->script("UbenSign");
+      return "STOP";
+    }
+    my $sign = $cnt ? "UbenSign" : "CyphenSign";
+    GAME->{Map}->script($sign);
+    $cnt = !$cnt;
+    return 0.0;
+  }
+);

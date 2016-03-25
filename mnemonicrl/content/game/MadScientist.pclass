@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+package Game::Stuff::MadScientist;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("MadScientist");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Mad Scientist",
+  Affinity => "SCI",
+  Wielding => "gearmace",
+  Carrying => [["goggles"]],
+  Descr    => "A Mad Scientist, with hair as wild as an Alchemist, but a neater lab robe
+               covered with dried blood rather than chemical burns. Extraordinary brass
+               goggles mask their eyes, and minute mechanisms adorn their frame, constantly
+               in motion.",
+
+  Stats => {
+    HP       => 5,
+    HP_Rate  => 1,
+    Str      => 4,
+    Def      => 4,
+    Dext     => 2,
+    ESM      => 3,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.4,
+);
+
+# make clockwork bot allies, send after a target. makes out of what?
+
+# abilities:
+# weld with torch
+# make stuff
+# assembly line
+# perpetual motion
+# explosion! self hurting
+
+42;

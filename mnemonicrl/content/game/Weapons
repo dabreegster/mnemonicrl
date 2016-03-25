@@ -1,0 +1,500 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Util;
+
+# Since it's easier to compare this way visually
+my @cols = (qw(Color Rank Power Accuracy Affinity));
+my @table = (
+  #                              1-10    1-15      -5 - 5
+  # Name                Color    Rank   Power     Accuracy    Affinity
+
+  # Adventurer's
+  ["shorthook",        "grey",    1,      1,        1,         "ADV"],
+  ["longhook",        "white",    2,      3,        2,         "ADV"],
+  ["thiefhook",       "Black",    4,      4,        4,         "ADV"],
+  ["grapplehook",      "blue",    6,      4,        4,         "ADV"],
+  ["harpoonhook",     "green",    8,      7,        5,         "ADV"],
+  ["anchorhook",     "purple",   10,     13,       -3,         "ADV"],
+
+  ["paperlantern",   "yellow",    1,      2,        1,         "ADV"],
+  ["brasslantern",   "orange",    3,      5,        3,         "ADV"],
+  ["firelantern",       "Red",    6,      9,        3,         "ADV"],
+
+  ["woodstaff",      "orange",    1,      2,        2,         "ADV"],
+  ["chiseledstaff",    "grey",    3,      5,        2,         "ADV"],
+  ["magicstaff",      "Green",    7,      9,        4,         "ADV"],
+
+  # Generic
+  ["lasertaggun",     "green",    2,      2,        2,         "ANY"],
+  ["ratflail",         "Blue",    1,      3,       -1,         "ANY"],
+  ["fortunawheel",   "yellow",    4,      6,        3,         "ANY"],
+  ["lavalampsword",    "cyan",    5,      7,        2,         "ANY"],
+
+  # Historian's
+  ["incensegun",       "Cyan",    1,      3,       -1,         "HIS"],
+  ["incensespear",      "red",    4,      6,        1,         "HIS"],
+  ["dragonburner",      "Red",    8,     11,        4,         "HIS"],
+
+  ["softback",         "cyan",    1,      2,        1,         "HIS"],
+  ["hardback",         "Cyan",    2,      5,        3,         "HIS"],
+  ["dictionary",     "orange",    5,      8,        3,         "HIS"],
+  ["fictiontome",     "green",    7,     13,        2,         "HIS"],
+
+  # Alchemist's
+  ["slingshot",      "yellow",    1,      2,       -2,         "ALC"],
+  ["firecracker",       "red",    3,      5,        1,         "ALC"],
+  ["cannon",          "white",    7,     14,        2,         "ALC"],
+
+  ["flamethrower",      "Red",    8,      7,        4,         "ALC"],
+
+  ["potionvial",     "purple",    2,      4,        2,         "ALC"],
+  ["cauldron",          "red",    5,      9,        1,         "ALC"],
+
+  # Artist's
+  ["pencil",         "orange",    1,      2,        1,         "ART"],
+  ["ballpointpen",    "Black",    2,      3,        1,         "ART"],
+  ["sharpie",         "white",    4,      6,        2,         "ART"],
+  ["occamrazor",       "Blue",    5,      5,        3,         "ART"],
+  ["scalpel",         "green",    6,      8,        4,         "ART"],
+  ["paintbrush",     "Purple",    8,     11,        2,         "ART"],
+
+  # Mad Scientist's
+  ["gearmace",         "cyan",    1,      3,       -2,         "SCI"],
+  ["gearflail",        "Cyan",    3,      5,        1,         "SCI"],
+  ["raygun",         "purple",    2,      2,        1,         "SCI"],
+  ["weldtorch",        "grey",    6,      5,        1,         "SCI"],
+  ["jackstones",      "white",    4,      6,        3,         "SCI"],
+  ["key",            "yellow",    5,      7,        2,         "SCI"],
+  ["pendulum",       "orange",    8,     12,       -1,         "SCI"],
+
+  # Musician's
+  ["guitarstring",     "grey",    1,      2,        1,         "MUS"],
+  ["drumstick",        "cyan",    1,      1,       -1,         "MUS"],
+  ["bassstring",     "orange",    3,      4,        2,         "MUS"],
+  ["trumpet",        "yellow",    5,      6,        2,         "MUS"],
+  ["violinstring",      "red",    7,      9,        4,         "MUS"],
+  ["accordian",      "purple",    9,     14,        3,         "MUS"],
+
+  # Steamist's
+  ["watergun",         "blue",    1,      2,       -1,         "STM"],
+  ["westrevolver",   "orange",    3,      6,        4,         "STM"],
+  ["pipe",              "red",    3,      5,        1,         "STM"],
+  ["fogmachine",       "grey",    4,      4,        1,         "STM"],
+  ["steamgrenade",    "white",    5,      7,        1,         "STM"],
+  ["steamcannon",    "purple",    8,     12,        2,         "STM"],
+
+  # Villain's
+  ["dagger",            "red",    1,      2,        2,         "VLN"],
+  ["umbrella",         "blue",    2,      4,        1,         "VLN"],
+  ["rapier",           "grey",    3,      5,        2,         "VLN"],
+  ["poisonvial",     "purple",    4,      4,        1,         "VLN"],
+  ["claw",             "cyan",    4,      7,        1,         "VLN"],
+  ["canesword",       "white",    5,      9,        3,         "VLN"],
+  ["daguerreotype",  "orange",    8,     11,        1,         "VLN"],
+);
+
+my %dat = (
+  shorthook => {
+    Base       => "RangedWeapon",
+    Name       => "short grapple hook",
+    Range      => 10,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "A short grappling hook with a rather flimsy chain."
+  },
+  longhook => {
+    Base       => "RangedWeapon",
+    Name       => "long grapple hook",
+    Range      => 20,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "A long grappling hook with a sturdy metallic chain."
+  },
+  thiefhook => {
+    Base       => "RangedWeapon",
+    Name       => "thief hook",
+    Range      => 5,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "Snake-like coils of chain with a claw on the end for stealing things.",
+    Attack     => {
+      StealItem => ["Item", 60]
+    }
+  },
+  grapplehook => {
+    Base       => "RangedWeapon",
+    Name       => "grapple hook",
+    Range      => 5,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "This grappling hook has a crank so you can reel in whatever poor enemy
+                   you manage to snag!",
+    Attack     => {
+      # REEL EM IN
+    }
+  },
+  harpoonhook => {
+    Base       => "RangedWeapon",
+    Name       => "harpoon hook",
+    Range      => 5,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "Man the harpoons, thar be bait we can grapple."
+  },
+  anchorhook => {
+    Base       => "RangedWeapon",
+    Name       => "anchor hook",
+    Range      => 5,
+    Projectile => ["=", "Red", "chain"],
+    Descr      => "A titanic anchor, rusty with blood, swings from the end of this
+                   reinforced grappling hook. How you can to manage to lug this thing
+                   around is a miracle in and of itself!"
+  },
+  paperlantern => {
+    Name     => "paper lantern",
+    Descr    => "A ceremonial paper lantern, quite flimsy and dimly burning."
+  },
+  brasslantern => {
+    Name     => "brass lantern",
+    Descr    => "A traditional brass lantern, worn from many previous adventures, burning
+                 brightly with enthusiasm and nostalgia."
+  },
+  firelantern => {
+    Name     => "firefly lantern",
+    Descr    => "The embers of a firefly radiate out from this intricate lantern,
+                 surrounding you with a hot aura.",
+    Attack   => {
+      # evoke for flames
+      Drain => ["HP", 2, 10]
+    }
+  },
+  woodstaff => {
+    Name     => "walking staff",
+    Descr    => "A simple wooden walking stick."
+  },
+  chiseledstaff => {
+    Name     => "chisel staff",
+    Descr    => "A thick walking stick with a comfortable handle and sharpened endpoint."
+  },
+  magicstaff => {
+    Name     => "magic staff",
+    Descr    => "This staff is decorated with arcane spells. You can do more than walk with
+                 this one...",
+    Attack   => {
+      # MAGIC
+    }
+  },
+  lasertaggun => {
+    Base       => "RangedWeapon",
+    Name       => "laser tag gun",
+    Descr      => "A plastic laser tag gun, though quite anachronistic, complete with the
+                   thumb-aching trigger. As you hold it, it beeps and glows soflty with a
+                   blue luminesence.",
+    Range      => 5,
+    Projectile => ["*", "Green"],
+  },
+  ratflail => {
+    Name  => "rat flail",
+    Descr => "It's a rat on a stick. What else is there to say?"
+  },
+  fortunawheel => {
+    Base       => "RangedWeapon",
+    Name       => "Wheel of Fortuna",
+    Descr      => "It's the powers of fate, in frisbee form! Fate's edges are sharp, and
+                   the low chanting of Carmina Burana emants from the glowing center.",
+    Range      => 10,
+    Projectile => ["O", "orange"],
+  },
+  lavalampsword => {
+    Name  => "lava lamp sword",
+    Descr => "Alien red bubbles gloop and queue in this small, hand-held lava lamp. The tip
+              appears to unscrew upon contact, so be sure to handle it carefully!"
+  },
+  incensegun => {
+    Base  => "RangedWeapon",
+    Name  => "incense gun",
+    Descr => "A humble incense stick holder, which seems capable of propelling the burning
+             stick.",
+    Range => 4,
+    Projectile => ["i", "orange"],
+    Ammo  => "incense"
+  },
+  incensespear => {
+    Name  => "incense spear",
+    Descr => "A long, sturdy spear with a fragrant, glowing tip."
+  },
+  dragonburner => {
+    Name  => "dragon burner",
+    Descr => "An elaborate handheld incense burner carved in the likeness of a dragon.
+              Openings exist to strategically vent whatever you decide to burn inside."
+    # surrounds you
+  },
+  softback => {
+    Name  => "softback book",
+    Descr => "A rather flimsy softcover book, with the pungent smell of a cheap dine store 
+              novel."
+  },
+  hardback => {
+    Name  => "hardback book",
+    Descr => "A thick, dog-eared hardcover. Probably Faulkner or Adams or some worthy
+              author."
+  },
+  dictionary => {
+    Name  => "dictionary",
+    Descr => "A massive dictionary filled with words you've never used."
+    # pritns words
+  },
+  fictiontome => {
+    Name  => "ficticious tome",
+    Descr => "A dusty tome whose existence is questionable, the contents particularly so.",
+    Attack   => {
+      # MAGIC
+    }
+  },
+  slingshot => {
+    Name       => "slingshot",
+    Descr      => "A child's slingshot. The elasticity is sufficient to launch potions.",
+    Base       => "RangedWeapon",
+    Range      => 5,
+    Projectile => ["!", "Purple"],
+    Ammo       => "potion",
+  },
+  firecracker => {
+    Name       => "firecracker tube",
+    Descr      => "A firecracker tube, covered with last summer's peeling paint. It should
+                   give any potion launched from it an extra <blue>oomph<grey>.",
+    Base       => "RangedWeapon",
+    Range      => 7,
+    Projectile => ["!", "Purple"],
+    Ammo       => "potion"
+  },
+  cannon       => {
+    Name       => "cannon",
+    Descr      => "A portable cannon with a slick fuse, able to launch potions at
+                   terminal velocities. Terminal for the target, that is.",
+    Base       => "RangedWeapon",
+    Range      => 10,
+    Projectile => ["!", "Purple"],
+    Ammo       => "potion"
+  },
+  flamethrower => {
+    Name       => "flamethrower",
+    Descr      => "A military-grade flamethrower, for impulsive pyromaniacs only.",
+    Base       => "RangedWeapon",
+    Range      => 3,
+    Projectile => ["%", "Red"],
+    Attack     => {
+      Range => ["beam", 3]
+    }
+  },
+  potionvial => {
+    Name  => "potion vial",
+    Descr => "A spare potion vial, with the remnants of some foul creation still bubbling
+              inside."
+  },
+  cauldron => {
+    Name  => "cauldron",
+    Descr => "A portable pewter cauldron, heavy enough to swing at an enemy."
+  },
+  pencil => {
+    Name  => "pencil",
+    Descr => "A rather flimsy, dull pencil. It's not even #2!"
+  },
+  ballpointpen => {
+    Name  => "ballpoint pen",
+    Descr => "A simple writing implement; it's also sharp enough for stabbing!"
+  },
+  sharpie => {
+    Name  => "sharpie",
+    Descr => "The potent arouma of the a sharpie penetrates your nasal cavity. When applied
+              to the face, it can cause unspeakable horrors..."
+  },
+  occamrazor => {
+    Name  => "Occam's Razor",
+    Descr => "The vorpal blade of Occam's Razor will simplify needless complications in any
+              battle."
+    # 1-on-1 fight, pauses others
+  },
+  scalpel => {
+    Name  => "artist's scalpel",
+    Descr => "An innocent scalpel, sharp enough to carve a sculpture or your initials into
+              the skin of any enemy."
+  },
+  paintbrush => {
+    Name  => "paint brush",
+    Descr => "A paint brush with a smooth handle and fine tip, dripping with ill omen for
+              its unfortunate canvas."
+  },
+  gearmace => {
+    Name  => "gear mace",
+    Descr => "A rusty gear from a large clock movement, attached to the end of a jagged
+              club. It's a bit cumbersome to hold, but you'll manage."
+  },
+  gearflail => {
+    Name  => "gear flail",
+    Descr => "A jagged gear with impractically sharpened teeth, evidently not from a
+              typical clock's movement, attached to a firm chain."
+  },
+  raygun => {
+    Name       => "raygun",
+    Descr      => "A retro-futuristic neo-Victorian raygun implanted in the current
+                   temporal slice... Er, an anachronism.",
+    Base       => "RangedWeapon",
+    Range      => 7,
+    Projectile => ["_", "Purple"],
+  },
+  weldtorch => {
+    Name  => "weldtorch",
+    Descr => "A stray welding torch hissing innocently, just waiting to join two unlikely
+              victims in a matrimony of horror.",
+    # can paralyze enemy for long time if next to a wall
+  },
+  jackstones => {
+    Name       => "jackstones",
+    Descr      => "A pair of toy jackstones, sharpened to a lethal point and modified to
+                   follow an erratic trajectory.",
+    Base       => "RangedWeapon",
+    Range      => 9,
+    Projectile => ["X", "grey"],
+  },
+  key => {
+    Name  => "key",
+    Descr => "Much more than a simple oversized brass unlocking device, this key unlocks a
+              target's pain centers."
+  },
+  pendulum => {
+    Name  => "pendulum",
+    Descr => "A hefty pendulum from a grandfather clock. Somehow it is enchanted to float
+              beside you and whack anything you command it to."
+  },
+  guitarstring => {
+    Name  => "guitar string",
+    Descr => "A somewhat flimsy B guitar string. It has pokey ends, but humidity has warped
+              it beyond tautness."
+  },
+  drumstick => {
+    Name  => "drum mallet",
+    Descr => "A small wooden drumming mallet, practically useless."
+  },
+  bassstring => {
+    Name  => "bass string",
+    Descr => "A thick, bronze-coated A bass string. It produces low notes resembling a
+             growl."
+  },
+  trumpet => {
+    Name  => "trumpet",
+    Descr => "A shrill brass trumpet. Don't play a fanfare just yet, you have to defeat
+              something first."
+  },
+  violinstring => {
+    Name  => "violin string",
+    Descr => "A sliver of violin string, quivering with tension, ready to slip around an
+              unsuspecting throat..."
+  },
+  accordian => {
+    Name  => "accordian",
+    Descr => "A zany old accordian with carnival-painted keys."
+  },
+  watergun => {
+    Name       => "water gun",
+    Descr      => "A small toy water gun, slightly warm to the touch.",
+    Base       => "RangedWeapon",
+    Range      => 3,
+    Projectile => ["~", "blue"],
+  },
+  westrevolver => {
+    Name       => "Weird West revolver",
+    Descr      => "A worn Western revolver, billowing steam out of the chambers.",
+    Base       => "RangedWeapon",
+    Range      => 7,
+    Projectile => ["^", "white"],
+  },
+  pipe => {
+    Name       => "rusty pipe",
+    Descr      => "A rusty brass pipe; no telling where it came from, but its destination
+                   is rather clear.",
+  },
+  fogmachine => {
+    Name       => "fog machine",
+    Descr      => "A modified fog machine designed to pump out scalding steam. Set it and
+                   run!",
+    # timer+area effect
+  },
+  steamgrenade => {
+    Name       => "steam grenade",
+    Descr      => "A metallic shell, highly pressurized with your favorite vaporized
+                   liquid.",
+    Base       => "RangedWeapon",
+    Range      => 7,
+    Projectile => [".", "green"],
+    # reusable? timer?
+  },
+  steamcannon => {
+    Name       => "steam cannon",
+    Descr      => "A massive circus cannon, ready to pump out concentrated bursts of
+                   steam.",
+    Base       => "RangedWeapon",
+    Range      => 12,
+    Projectile => ["0", "white"],
+  },
+  dagger => {
+    Name  => "dagger",
+    Descr => "An easily concealable dagger, gilded with a fancy design."
+  },
+  umbrella => {
+    Name  => "umbrella",
+    Descr => "A hefty umbrella, the fabric stripped off, leaving some pointy spokes to jab
+              and twirl mercilessly at an enemy's face."
+  },
+  rapier => {
+    Name  => "rapier",
+    Descr => "A thin, lengthy blade with a subtle sheath."
+  },
+  poisonvial => {
+    Name  => "poison vial",
+    Descr => "A miniscule vial filled with a clear liquor, deadly to the tongue."
+  },
+  claw => {
+    Name  => "claw",
+    Descr => "A wearable glove with claws sharpened to a tip."
+  },
+  canesword => {
+    Name  => "canesword",
+    Descr => "Not only a smooth cane for the dapper gentleman, but also a lethally sharp
+              sword. Execute in style."
+  },
+  daguerreotype => {
+    Name  => "daguerreotype",
+    Descr => "An ancient camera encased in a brass box. The lens winks eerily, and the
+              flash looks to be blinding."
+  },
+);
+
+my @items;
+foreach my $entry (@table) {
+  my $type = shift @$entry;
+  return "no item data for $type" unless $dat{$type};
+  $dat{$type}->{Type} = $type;
+  for (0 .. $#cols) {
+    my $attrib = $cols[$_];
+    $dat{$type}->{$attrib} = $entry->[$_];
+  }
+  push @items, delete $dat{$type};
+}
+if (%dat) {
+  return ["item dat not in table", keys %dat];
+}
+
+# Finally, transform this data into real packages
+my @packages;
+foreach my $weapon (@items) {
+  my $type = delete $weapon->{Type};
+  my $package = "Game::Stuff::Weapon::$type";
+  push @packages, $package;
+  my $isa = "Game::StdLib::Item::Equipment::Weapon";
+  if (my $base = delete $weapon->{Base}) {
+    $isa = GAME->{Templates}{$base};
+  }
+  eval "package $package; our \@ISA = ('$isa');";
+  $package->announce($type);
+  $package->classdat(%$weapon);
+}
+
+@packages;

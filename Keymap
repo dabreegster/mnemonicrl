@@ -1,0 +1,23 @@
+[UI]
+<KEY_DOWN>       = down
+<KEY_UP>         = up
+<KEY_LEFT>       = left
+<KEY_RIGHT>      = right
+<KEY_HOME>       = first
+<KEY_END>        = last
+<BACKSPACE>      = backspace
+<DELETE>         = delete
+<ENTER>          = ok
+<TAB>            = switch_focus
+<ESCAPE>         = cancel
++                = next_target
+H                = target_w
+J                = target_s
+K                = target_n
+L                = target_e
+#Y                = target_nw
+#U                = target_ne
+#B                = target_sw
+#N                = target_se
+<KEY_PPAGE>      = page_up
+<KEY_NPAGE>      = page_down

@@ -1,0 +1,80 @@
+#!/usr/bin/perl
+package Game::Stuff::Adventurer;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Adventurer");
+
+use Game::Attack;
+use BDSM::Vector;
+
+__PACKAGE__->classdat(
+  Class    => "Adventurer!",
+  Affinity => "ADV",
+  Wielding => "paperlantern",
+  Carrying => [["spyglass"], ["utilknife"], ["shorthook"]],
+  Descr    => "A hardy Adventurer, ready to explore the farthest corners of the map. They
+               have donned a backpack, durable boots, and a jacket with countless pockets.
+               No telling what situation they aren't prepared for; survival is their
+               nature.",
+
+  Stats => {
+    HP       => 6,
+    HP_Rate  => 1,
+    Str      => 3,
+    Def      => 3,
+    Dext     => 3,
+    ESM      => 3,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.1,
+
+  Attacks => {
+    swing => Game::Attack->new(
+      Name    => "swing",
+      LearnAt => 2,
+      Descr   => "Swing your lantern around and bash anybody next to you.",
+      ESMCost => 4,
+      Check   => sub {
+        my $self = shift;
+        my $w = $self->{Equipment}{Weapon};
+        return STOP($self, "[subj] isn't wielding a lantern!") unless $w and $w->type =~ m/lantern/;
+      },
+      Range   => ["custom", sub {
+        my ($heap, $self) = @_;
+        my @pwn;
+        foreach (adjacent_tiles("diag", $self->{Y}, $self->{X})) {
+          my $victim = $self->{Map}->get(@$_);
+          push @pwn, $victim if is_obj($victim);
+        }
+        return @pwn;
+      }],
+      Lag     => 3,
+      # Depends on weapon power too?
+      Damage  => sub {
+        my $self = shift;
+        return $self->{Equipment}{Weapon}->power + random(5, 10);
+      }
+    ),
+    compass => Game::Attack->new(
+      Name     => "compass",
+      LearnAt  => 5,
+      Descr    => "Channel magnetic energy and direct it North.",
+      ESMCost  => 9,
+      Range    => ["custom", sub {
+        my $self = shift;
+        my $target = $self->{Map}->get($self->{Y} - 1, $self->{X});
+        return $target if is_obj($target);
+      }],
+      Lag      => 5,
+      Damage   => sub { random(15, 30) },
+      Paralyze => [3]
+    )
+  }
+);
+
+42;

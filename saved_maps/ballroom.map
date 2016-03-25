@@ -1,0 +1,102 @@
+LAYER1
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                              <                                 
+                                                                
+                                                                
+LAYER2
+           //                                     \\            
+            //                                   \\             
+           //                                     \\            
+            //                                   \\             
+           //                                     \\            
+            //                                   \\             
+           //                                     \\            
+            //                                   \\             
+           //                                     \\            
+            //                                   \\             
+             _____________________________________              
+            |\                                   /|             
+____________|\\               8                 //|____________ 
+            \\\\              |                ////             
+             \\\\                             ////              
+              \\\\___________________________////               
+               \\\|                         |///                
+                \\|        Big Band         |//                 
+                 \|_________________________|/                  
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+LAYER3
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,red,red,red,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,red,red,red,,,,,,,,,,,,,
+,,,,,,,,,,,,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,,,,,,,,,,,,,,
+,,,,,,,,,,,,grey,grey,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,grey,grey,,,,,,,,,,,,,,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,,,,,,,,,,,,,,,grey,,,,,,,,,,,,,,,,,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,
+,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,,grey,,,,,,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,
+,,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,,,,,,,,,,,,,grey,grey,grey,grey,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,grey,grey,grey,,,,,,,,,grey,grey,grey,,grey,grey,grey,grey,,,,,,,,,,grey,grey,grey,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+LAYER4
+$VAR1 = {
+  spawnpt => {
+    main => [ [20, 21], [20, 22], [20, 23], [20, 24], [20, 25], [20, 26], [20, 27], 
+              [20, 28], [20, 29], [20, 30], [20, 31], [20, 32], [20, 33], [20, 34], 
+              [20, 35], [20, 36], [20, 37], [20, 38], [20, 39], [20, 40], [21, 21], 
+              [21, 22], [21, 23], [21, 24], [21, 25], [21, 26], [21, 27], [21, 28], 
+              [21, 29], [21, 30], [21, 31], [21, 32], [21, 33], [21, 34], [21, 35], 
+              [21, 36], [21, 37], [21, 38], [21, 39], [21, 40]
+            ]
+  },
+  _Data => {
+    nostairs => 1,
+    superlight => 1,
+    Depth => 'Hotel_Ballroom',
+    empty => 1,
+    Effects => {},
+    Toys => [
+    ],
+    MkStairs => [
+      [22, 30, "Hotel_Atrium", "ballroom"]
+    ]
+  }
+};

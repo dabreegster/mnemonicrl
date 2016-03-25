@@ -1,0 +1,129 @@
+#!/usr/bin/perl
+package Game::Stuff::Alchemist;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Alchemist");
+
+use BDSM::Vector;
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Alchemist",
+  Affinity => "ALC",
+  Wielding => "slingshot",
+  Carrying => [["hipflask"], ["potion", Qty => 10]],
+  Descr    => "A frizzy-haired Alchemist, ideas brewing in their skull. They wear a ripped,
+               burned, and otherwise soiled lab coat, reek of burnt cabbages, and parts of 
+               them are always on fire. The Alchemist doesn't mind; they live to
+               transmogrify things to produce a greater explosion.",
+
+  Stats => {
+    HP       => 7,
+    HP_Rate  => 1,
+    Str      => 2,
+    Def      => 2,
+    Dext     => 3,
+    ESM      => 4,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.8,
+
+  Attacks => {
+    bunsenburn => Game::Attack->new(
+      Name    => "bunsenburn",
+      LearnAt => 1,
+      Descr   => "Let loose a demonstrative fireball from the lab's burner!",
+      ESMCost => 3,
+      Range   => ["area", 5, 3],
+      Lag     => 3,
+      Damage  => sub { random(5, 8) },
+      Draw    => ["&", "Red"]
+    ),
+    flood => Game::Attack->new(
+      Name    => "flood",
+      LearnAt => 5,
+      Descr   => "Summon a pipe and let loose a spout of vile chemical.",
+      ESMCost => 2,
+      UI      => sub {
+        my $self = shift;
+        msg err => "What direction? (hjkl)";
+        UI->start_in;
+        my $dir;
+        while (1) {
+          $dir = lc UI->wait_input;
+          last if $dir =~ m/^[hjkl]$/;
+          UI->stop_in, return STOP($self, "Never mind then."), if $dir eq " ";
+        }
+        UI->stop_in;
+        $dir = {
+          h => "west",
+          j => "south",
+          k => "north",
+          l => "east"
+        }->{$dir};
+        return $dir;
+      },
+      Range   => ["custom", sub {
+        my ($heap, $self, $dir) = @_;
+        $heap->{go} = substr($dir, 0, 1);
+
+        my ($y, $x) = dir_relative($dir, $self->{Y}, $self->{X});
+        my (@targets, @floodpts);
+        my $cnt = 0;  # Until the leader
+        until ((my $tile = $self->{Map}->get($y, $x)) eq "#") {
+          $cnt++ unless @targets;
+          if (ref $tile) {
+            $tile->{BeforeFlood} = [$tile->{Y}, $tile->{X}];
+            push @targets, $tile;
+          }
+          push @floodpts, [$y, $x];
+          ($y, $x) = dir_relative($dir, $y, $x);
+        }
+        # The flood won't go ALL the way to the wall if there are targets...
+        splice(@floodpts, scalar(@floodpts) - scalar(@targets));
+        $heap->{pts} = \@floodpts;
+
+        $heap->{delay} = 0.1 * $cnt;
+
+        # Calculate the rest of the 
+
+        return @targets;
+      }],
+      Before => sub {
+        my ($attack, $heap, $self) = @_;
+
+        return unless GAME->fullsim;
+        return unless my $leader = $heap->{targets}[0];
+        my $go = $heap->{go};
+        # Now that we have a leader, we can just push people!
+        while (1) {
+          last unless $leader->$go;
+          snooze 0.1;
+        }
+      },
+      PtLag   => 0.12,
+      Draw    => ["T", "Blue", "chain"],  # TODO erases the river?
+      Lag     => 10,
+      Damage  => sub {
+        my ($self, $victim) = @_;
+        my ($y, $x) = @{ delete $victim->{BeforeFlood} };
+        return euclid($y, $x, $victim->{Y}, $victim->{X});
+      }
+    ),
+  }
+);
+
+# weapons:
+# potions (how to make?) (throw them like grenades) or launch w/ weapon
+
+# abilities:
+# mix potions from ?
+# transmute
+
+
+42;

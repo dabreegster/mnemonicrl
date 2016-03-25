@@ -1,0 +1,52 @@
+{ 
+  Classes  => ["Guest"],
+  Items    => ["content/game/Weapons", "content/game/Items", "content/game/Masks"],
+  Monsters => ["content/game/Monsters"],
+  Setup    => sub {
+    GAME->{NoDiffuse} = 1;
+    GAME->{LogicMap} = {};
+
+    my $all = 1;
+    log_push("Building maps... All? $all");
+
+    GAME->addlvl("content/hotel/lobby.map");
+    GAME->addlvl("content/hotel/overworld.map");
+
+    if ($all) {
+      # Special places
+      GAME->addlvl("content/hotel/atrium.map");
+      GAME->addlvl("content/hotel/keyboard.map");
+      GAME->addlvl("content/hotel/pool.map");
+      GAME->addlvl("content/hotel/elevator.map");
+      GAME->addlvl("content/hotel/ballroom.map");
+      GAME->addlvl("content/hotel/vending.map");
+      GAME->addlvl("content/hotel/gift_shop.map");
+      GAME->addlvl(Kitchen => BDSM::DunGen::Kitchen->generate(20, 20));
+
+      # Floors
+      GAME->addlvl("content/hotel/self.map");
+      GAME->addlvl("content/hotel/lock_key.map");
+    }
+
+    #debug GAME->{LogicMap};
+    
+    GAME->{Levels}{Start} = GAME->{Levels}{Hotel_Lobby};
+    log_pop("Done pregenerating maps");
+
+    # Game state
+    GAME->{HotelClock} = GAME->make("HotelClock");
+
+    # The legions.
+    unless (GAME->{NoDiffuse}) {
+      GAME->make("GuestNPC",
+        start => "Hotel_Atrium",
+        Name  => "Guest $_",
+        spawn => "anywhere",
+        Color => random_color()
+      ) for 1 .. 20;
+    }
+  },
+  Login => {
+    Class => "Guest"
+  }
+}

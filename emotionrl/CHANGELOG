@@ -1,0 +1,715 @@
+#####################
+# PerlRL: Changelog #
+#####################
+
+#############
+# Pre-0.0.1 #
+#############
+
+- The project was started sometime in July, I think. I didn't really have
+  proper releases until 0.0.1. Only basic movement and buggy dungeon generation
+  was present in these pre-releases.
+
+######################################
+# 0.0.1 - Mon, Sept. 5 (Milestone 0) #
+######################################
+
+- First offical release of the project!
+- Everything seems to work.
+- The borders for the windows in the UI were disabled. This seems to reduce
+  flicker a little bit.
+
+#########################
+# 0.0.2 - Sun, Sept. 11 #
+#########################
+
+- Picking up single items at a time is implemented.
+- Dropping items works.
+- Letters representing items are correctly assigned under every tested
+  circumstance.
+- The inventory screen works, though a bug exists dealing with input.
+- Inventory in general works.
+
+#########################
+# 0.0.3 - Wed, Sept. 14 #
+#########################
+
+- The list action was implemented, which just lists items on a tile.
+- The event system was used to make the list action be called after the Player
+  moves.
+- Fixed the input bug in inventory mode. The invmode() sub was a normal Action
+  method interrupted by the system that does Before and After events. Return
+  values from the actual routines need to be returned. Since invmode isn't
+  really an Action, it was made so that it bypasses the AUTOLOAD.
+- AUTOLOADed action subs return the right return value thing.
+- Picking up multiple items works as one single turn. The way it works is a bit
+  messy, but can be improved later.
+- The message window only displays the last 5 messages, correctly.
+- The old routines for generating simple rooms was reviewed and tidied up a
+  bit. It's still stable.
+
+#########################
+# 0.0.4 - Thu, Sept. 15 #
+#########################
+
+- Bugs were eliminated in the old code that finds the coordinates of the walls
+  of a Structure. It now seems to be stable.
+- All messages are logged permanently in the game session.
+- percent($x) takes a number between 1 and 100 and returns 1 $x percent of the
+  time.
+- The Before/After system was tidied up a bit and the action subroutine's
+  return value is always returned if it's not interrupted by a Before.
+- Messages have been cleaned up.
+
+#########################
+# 0.0.5 - Sat, Sept. 17 #
+#########################
+
+- Dungeon generation is stable. Rooms and hallways are properly connected.
+  Though this is the only real change, I consider it to be important enough to
+  merit its own release.
+
+#########################
+# 0.0.6 - Wed, Sept. 21 #
+#########################
+
+- Basic, static, immobile monsters have been implemented.
+- Basic weapons have been implemented.
+- Wield, wear, and take off have been implemented.
+- The inventory order for tiles has been changed. New items dropped onto a tile
+  are pre-appended onto the front of the list.
+- A generalized D.O. selector has been built into the Engine. It provides a
+  simple interface to prompt for an object from the Player's inventory, cutting
+  down on annoying repitition.
+- Monsters were given the get, drop, and wield methods.
+
+#########################
+# 0.0.7 - Fri, Sept. 23 #
+#########################
+
+- A better way for passing in initial weapons and armour for characters has
+  been implemented. Wielding and Wearing are now used. They ensure the
+  equipment in question is possessed and wielded or worn.
+- When the Player switches weapons or armour, their strength, defense, and
+  accuracy stats are modified accordingly.
+- The statusbar is somewhat implemented, though messily.
+- Attacking for both the Player and monsters is implemented, though the numbers
+  and calculations are way off.
+- Every room has a list of characters in it that is accurate at all times. An
+  event in the queue makes use of this and calls their per-turn handler which
+  will be used in the future for A.I.
+
+#################################
+# 0.0.8 - Fri, Sept. 23 (Later) #
+#################################
+
+- Utility actions like viewing inventory are not counted as actions.
+- Monsters move towards the Player and attack correctly.
+- The idle command has been implemented.
+- Monsters attack from the current room and all surrounding rooms.
+- Monsters are a bit smarter in avoiding obstacles. For instance, if there's an 
+  obstacle preventing them from going southwest, they'll just go south.
+- Death has been implemented. Bwahahaha...
+
+#########################
+# 0.0.9 - Sun, Sept. 25 #
+#########################
+
+- Killing an enemy doesn't make the attacker occupy the tile of the enemy on
+  that same turn.
+- Each structure may have multiple walls for each of the four cardinal
+  directions, and each wall may have its own exit.
+- Mysteriously, the above change also seems to have made dungeon generation
+  better. Usually, it'd fail randomly and not build a certain structure because
+  of too many failures, but this time, the number of failures is greatly
+  reduced.
+- Colors are now much more flexible, though tied to ncurses even outside of
+  Interface::Curses.
+- Text::Wrap is used to split long messages up into several parts, so that they
+  are displayed properly.
+- The reference to objects in the Game object are weakened. So they're
+  destroyed automatically when every other reference to the object is
+  destroyed. I'm not sure if this works properly, though.
+- The statusbar, since it's such a per-game sort of thing, will be refreshed in
+  $Game->{PostTurn}. The statusrefresh() method is now also more flexible.
+
+#################################
+# 0.1.a - Sun, Sept. 25 (Later) #
+#################################
+
+(This rewrite was slightly rushed and so bugs remain that weren't present in
+ 0.0.9. This release should be considered unstable and the real 0.1 should be
+ used.)
+
+- connect() and place() were moved from Area::Cave to Areas.
+- connect() was cleaned up and made more concise.
+- The Labyrinth and Cavern areas were deleted. Those dungeon styles need to be
+  re-done completely.
+- Area::Cave's generate() was cleaned up and made more concise.
+- The general Object and Character system has been revamped.
+- I reviewed all of the code briefly, but did not make any changes that aren't
+  listed above.
+
+#########################
+# 0.1.b - Wed, Sept. 28 #
+#########################
+
+(This was a complete rewrite. The code feels clean, but works incorrectly.)
+
+- Everything was re-done generally.
+
+#########################
+# 0.1.c - Thu, Sept. 29 #
+#########################
+
+(The integration of new code gradually worked at first, but I went too quickly
+ and it's too buggy to fix. Another rewrite will be coming eventually.)
+
+- Dungeon generation was tidied up a bit, but bugs were unknowingly introduced.
+
+#####################################
+# 0.1 - Fri, Sept. 30 (Milestone 1) #
+#####################################
+
+- The first release of PerlRL is at last stable! It was finished right in time.
+- Many, many things were generally revamped and improved. The code looks better
+  and feels better.
+- Monsters are slightly less stupid in the way they move.
+
+#######################
+# 0.1.1 - Sat, Oct. 8 #
+#######################
+
+- A very basic load() subroutine for static Areas' Tilemaps was created in
+  Areas.
+- A TiledArea has been created. It correctly duplicates a Tilemap.
+- The load() subroutine was made much more advanced. Tiles can now be defined.
+- The saydump() utility has been created. It's like dump, except the output
+  goes to the message log and the data structures aren't searched so deeply.
+- An insanely basic and stupid bug has been found in Interface::Curses. This
+  has caused every color-related problem. All I had to do was call the Curses
+  standend() function to return attributes to normal every turn. The interface
+  is now very stable and fast enough.
+- The Before/After event system was modified to allow for multiple events. This
+  helps when both templates and individual objects try to define the same
+  event.
+- Objects now have their own move() routine and all newly created Objects are
+  moved to their tile if they're told where to go.
+- The region outside of rooms and structures in an area has an ID of 0. It
+  seems to work correctly.
+- Monsters don't get impatient if another monster is in their way of the
+  Player.
+
+#########################
+# 0.1.2 - Thurs, Dec. 1 #
+#########################
+
+- The ability to print special ANSI characters has been added. Simply set the
+  symbol to an ACS symbol.
+- I fixed the message bar for real this time. It works completely right for any
+  type of message of any sort.
+- Tiled areas have zone IDs assigned. This may not work correctly yet, but it
+  seems to for the test case.
+- The tiledat method was added for every Object. This returns the data
+  structure describing the zone the object currently resides.
+- Data structures describing the zones in a tiled area are being created
+  correctly. This will allow for such things as spawn points.
+- The attack system for Players is more versatile.
+- Logical connections are being forged between zones correctly, provided the
+  map's Y1, X1, Y2, and X2 coordinates are aligned correctly.
+- Wraparound maps now work correctly in the tiled area's logical connection
+  forging.
+- Revamped the action system. It works exactly the same, but allows actions to
+  be anonymous subroutines or methods.
+- Created the attack system with one attack pattern that also happens to be a
+  directly-usable attack called by default by move().
+- Removed the ridiculous power stats that were made obselete by the attack
+  system.
+- Removed the anonymous subroutine action rubbish and revamped the attack system
+  for real this time. The default weapon attack is implemented correctly,
+  though a bug dealing with messaging exists.
+
+########################
+# 0.1.3 - Wed, Feb. 15 #
+########################
+
+- Made the message system very flexible by adding message IDs.
+- Finally returned to work on PerlRL.
+
+#######################################
+# 0.2.0 - Sat, March 18 (Milestone 2) #
+#######################################
+
+- I rewrote the entire system from scratch. Everything is completely revamped.
+  Major design changes are listed below.
+- Objects now inherit from a single other object. In a Unix-like philosophy,
+  everything is an object.
+- Proper OOP methods provide an encapsulated data interface.
+- A priority queue is used in the main engine.
+- The action system is modularized and better at redirection.
+- The user interface is better encapsulated.
+- Each tile, as well as characters, has an inventory. A container class
+  handles manipulations of quantities.
+- A powerful and flexible event system allows reactions to be versatile and as
+  specific as possible.
+(Everything does not work as it should, but things are very stable. The main
+modules that are unimplemented from previous versions provide random dungeon
+generation, poor full-screen displays, and more usable actions.)
+
+###########################
+# 0.2.1.a - Sun, March 19 #
+###########################
+
+(Revision a released so a backup will exist prior the major action interface
+change.)
+
+- Fixed a bug in the message drawing routine. Colors now work correctly.
+- Objects within a container now have a reference to their container.
+- Using panels, I can successfully display a full-sized console window for
+  messages and restore the main display. The console is very basic right now.
+- Basic scrolling and color capabilities have been added to the console.
+- All color-related bugs in the message bar and console seem to have been
+  fixed.
+- The message log viewer has been coded.
+- A simple scrolling bug was fixed.
+- Containers can handle quantities, I hope.
+
+############################
+# 0.2.1.b - Tues, March 21 #
+############################
+
+- The action interface has once again been greatly redesigned. Actions are
+  separated into two distinct passes. The preprocessing stage determines energy
+  required and evaluates arguments. The second pass sends event triggers.
+- After much tribulation, an annoying bug regarding closures and lexicals was
+  discovered. This led me to train the main Engine loop to pass arguments to
+  the subroutine it's executing. I also moved the turn counter updater to a
+  better position.
+- I fixed the get bug. get is no longer the name of the data accessor. Use g().
+  My head is now officially dead.
+- The get action is finally implemented correctly, I hope.
+- The inventory viewer has been implemented.
+- The inventory selector of the UI has been coded.
+- The drop command has been implemented.
+- The list command has been implemented and inventory usability in general
+  improved.
+- All inventory-related bugs seem to have been fixed.
+- The message log shows the last screenful of messages by default.
+
+#########################
+# 0.2.2 - Sat, March 25 #
+#########################
+
+- The idle command has been implemented.
+- The message UI system has been improved. The message refresh routine is only
+  called when necessary.
+- The UI behavior when exiting a display console isn't as screwy as I thought,
+  so I just deleted the entry from the TODO.
+- I at least planned for more specific debugging facilities in the future.
+- Bound variables are more powerful. The event system has also been redesigned
+  slightly and will soon be implemented.
+- The event system, though rather crappily implemented, works for simple stuff.
+- All player-specific code in the Character code has been implemented as an
+  event.
+- The event system seems to work for more complex cases too.
+- I decided to not simply port the dungeon generation modules, but instead
+  delay the redesign and reimplementation.
+- I also decided the 'name in different form' function is obselete due to the
+  event system.
+
+#########################
+# 0.2.3 - Mon, March 27 #
+#########################
+
+- The simple ID bug where an ID is skipped has been fixed.
+- The statusbar UI system is implemented.
+- An annoying attribute-related color bug was fixed in the displaying of the
+  display console, the message bar, the status bar, and even the main display
+  itself. It seems to be a Curses issue of some sort. The fix slows things down
+  a good bit.
+- Exiting from an inventory selection screen works slightly better. The
+  statusbar still isn't refreshed, though.
+- A kludgy fix for the above problem was implemented. I dunno why refreshing
+  the Curses window doesn't just work though.
+- There weren't really any problems in the internal ordering of the container,
+  merely a lack of sorting when keys of a hash are extracted.
+- I decided a tie interface to the tile system is nothing but a complexity and
+  slow-down. It's nearly pointless without quantum superpositions anyway.
+
+#########################
+# 0.2.4 - Wed, March 29 #
+#########################
+
+- Partial refreshes were deemed pointless. Instead, COLOR_PAIR was moved to a
+  place where it wouldn't be called so frequently.
+- The template system works beautifully now. A module merely defines a local
+  object and some normal action subroutines and then calls a utility function.
+  Some simple symbol table hackery that took me ages to figure out ensures all
+  the templates are cleanly exported.
+- The rather simple attack() proxy was implemented. Its core design itself
+  wasn't tough.
+- A react() interface that works horribly unwell makes defining event reactions
+  slightly nicer. Likewise, a register() routine adds to an observer list.
+
+########################
+# 0.2.5 - Mon, April 3 #
+########################
+
+- An object's entry in the master Game list is weakened. This should hopefully
+  facilitate garbage collection.
+- The SingleUse Item module defines templates for food, scrolls, and potions.
+  They don't actually do anything yet though.
+- The destroy routine either subtracts one from an object's quantity or has it
+  removed from its container.
+- The selectinv() UI function now can handle selecting objects only from
+  certain categories.
+- The extremely simple actions of read, quaff, and eat have been implemented.
+- Templates for all equipment have been created, as well as a basic bodypart
+  layout.
+- After much tribulation, I figured out I've been abusing the event system. I
+  created a special new message system to fix it and implemented default
+  messages.
+- I fixed an extremely annoying bug in the low-level set routine. It was
+  causing much headacheness.
+- Finally wield and unwield work correctly. Due to the complexity of the
+  equipment system, puton and takeoff have been delayed to 0.2.6.
+- Dropping a weapon first unwields it.
+
+########################
+# 0.2.6 - Sun, April 9 #
+########################
+
+- Undefined values are better dealt with. Instead of forcing things to test for
+  definedness, a blank value is returned, or -1 if an ID was asked for. All the
+  code was updated to remove the ridiculous checks.
+- The equipment system was changed slightly. Wield and unwield now work
+  slightly better, though I'm not exploiting the message system as I should be.
+- The above hack has been fixed cleanly by passing the slot to the
+  equip/unequip messages.
+- The statusbar was updated to include the weapon name and the low-level data
+  accessor was fixed to not give up so easily. If an object is pointed to, an
+  entirely new recursive call of g() is spawned.
+- Another annoying low-level set()-related bug was fixed.
+- The wear and takeoff commands have been implemented correctly. When the user
+  must select an equipment slot, a special UI function must be invoked, which
+  is yet to be written.
+- The rather basic selectchoice() has been created, completing the wear/takeoff
+  commands.
+- A somewhat basic name routine has been added, making inventory look slightly
+  more professional.
+- Eating food prints a message based on the food or a default message.
+
+#######################
+# 0.2.7 - Wed, May 10 #
+#######################
+
+- Each actor now has its own queue of scheduled actions. The Engine's main loop
+  correctly handles priority, energy, and cost.
+- The action system was revamped again, separating actions into 3 separate
+  passes.
+- All actions have been migrated to the new system, and though I can vouch for
+  stability, I certainly can't ensure the design is clean.
+- After an extremely painful montage of headaches, implicit actions work as
+  they should. All actions have been changed if needed to facilitate this.
+- The Queue for an actor was being stored in the Character template because of
+  the way I push and pop on an array accessed through the data interface. This
+  was fixed by explicitly creating a queue in a character's new routine.
+- The init system was once again fixed. Only instance-specific variables and
+  actions are manipulated in the routines. All init routines of an object's
+  bases are executed in order from least general to most specific.
+- Dropping a wielded item costs only 1 energy; unequipping doesn't cost
+  anything. I'm not entirely sure this works, but the energy of it is 0, so it
+  should.
+- The UI preprocessing stage was moved to the UI module.
+- Fixed a bug that first prevented list() from being called and then one that
+  prevented list from receiving the indirect option.
+- The preprocessing stage is slightly nicer. Arguments can be spliced in at the
+  end if "-" is the argument.
+- I brainstormed quite a bit about rule-based systems in comparision to the
+  current event/reaction model. Inform 7 has some nice ideas, but all of them
+  are too abstract to consider now.
+- The UI is slightly nicer when determining if there are any appropriate
+  objects to display.
+- Since I was unable to find a better rule-based design, for now, ensuring
+  actions only work on the right kind of items is kludgy, property-based, and
+  only works for the Player when performed by means of the UI.
+
+#######################
+# 0.2.8 - Fri, June 2 #
+#######################
+
+- My summer vacation has started, so I've returned to regular work on PerlRL.
+  I've spent the past few weeks passively brainstorming about events. I've
+  redesigned the system such that reactions are centered around the subject of
+  the event, rather than the actor reacting. This fixes many priority-related
+  design flaws.
+- In accordance with the above design change, I changed the reaction creator,
+  fixed all current reactions to be logical (THEY MAKE SENSE NOW!), and
+  destroyed the 'register observer' routine.
+- The new event system works completely! The design is beautiful, the
+  implementation is simple, and it's not as slow as I thought it'd be!
+- The event deactivation routine is now functional and tested.
+- I created the Standard Library module that simply defines a good default
+  world model for a standard roguelike. I'll try to move all content-based
+  stuff to this module. It pretty much defines templates, variables, and such.
+- I ported all the preprocessing stages of actions to the StdLib. I integrated
+  the UI stage with the checks and redirection stage.
+- The Engine has been adapted to work with the new preprocessing system.
+
+#######################
+# 0.2.9 - Mon, June 5 #
+#######################
+
+- I determined that encapsulating the routine to set data causes much more
+  trouble than it solves. The functionalities it provides are made obselete by
+  the event system. I removed it and fixed every instance in the code that set
+  data.
+- I determined that automatically dereferencing anonymous hashes and arrays is
+  pointless. Most of the time, things need to be treated as arrays or hashes,
+  not mere lists. So no change.
+- The message system was once again changed. The syntax is more flexible.
+  Messages are no longer stored with the actor; the source prints them
+  directly. The new versatility allows for intelligent subject-verb agreement.
+  All messages have been created and tested.
+
+#####################################
+# 0.3.0 - Mon, June 5 (Milestone 3) #
+#####################################
+
+- I decided tradition is irrelevant. Though the initial 0.1 and 0.2 milestones
+  were met with complete rewrites of some sort, I decided a rewrite was
+  completely unnecessary for the 0.3 milestone. Instead, I merely reflected
+  upon this third milestone and planned out the first few 0.3 releases.
+
+#########################
+# 0.3.1 - Thurs, June 8 #
+#########################
+
+- Objects can now have their own little routines without preprocessing, events,
+  or any of that fancy action fluff.
+- In preprocessing, if expected arguments are not received and cannot be
+  retrieved since the actor isn't the Player, a warning will be printed instead
+  of it silently failing.
+- I brainstormed a fair bit about serialization and the types of content. I've
+  separated all data into static game content that's defined by scripts
+  or special parsed files and dynamic data that changes.
+- I wrote the basic hardcoded interface for saving and loading random numbers.
+- I adapted the RNG utilities to use the appropriate queues if necessary.
+- I clearly defined the two types of names ("the foo" or, if unique, just
+  "Foo"; and "3 arrows (wielded)") and fixed the usage.
+- I determined further advancing serialization is pointless without a good
+  example of the content to serialize. Since random dungeons aren't implemented
+  yet, I decided to post-pone improved map serialization till later.
+
+########################
+# 0.3.2 - Sun, June 11 #
+########################
+
+- I planned out the different styles of randomly generated dungeons. The basic
+  module framework of areas and structures has been set up.
+- Blank dungeons are generated correctly. Plain rooms are as well. They are
+  correctly placed in the blank dungeon.
+- For convenience, a 'redo' command has been implemented. It recreates a new
+  dungeon and clears the random queue. Unfortunately, a really strange bug
+  exists that leaves invisable ghost images of the old rooms only in the
+  player's mind, not the display.
+- Rooms now have randomly cut corners. It looks beautiful!
+- I fixed the ghost bug. It was quite a clever little problem, actually.
+- The coordinates of every valid wall of a room are now correctly marked. For
+  the life of me, I can't figure out why I did it that kludgy way before. It
+  works perfectly.
+- Data of each new room is correctly stored in the larger map structure.
+  Everything is ready for things to be connected.
+- Hallways are correctly generated.
+- Hallways are correctly attached to rooms.
+- The dungeon generation code is poorly designed, it seems. Individual
+  components such as wallfinding and room generation work superbly, but
+  connectivity and exits need work. Therefore, dungeons have been put on hold.
+  I'll start on another style.
+
+########################
+# 0.3.3 - Sun, June 18 #
+########################
+
+- The rather simple vault style of dungeons works, but it's not that great.
+- The cellular automata-based style looks very nice. It could be refined by use
+  of code that ensures all spaces are reachable, however.
+- The tunnel style looks the best, so far.
+- The building style is buggy, but there.
+- The dungeon style may now be chosen.
+- The cave style has been started. It's not complete yet and there seem to be
+  mysterious connection-related bugs, but the style effectively outperforms the
+  dungeon style.
+- I presumably cleared up the above connection bugs, though I fail to fully
+  comprehend what was going wrong and precisely how I fixed it. The cave style
+  is starting to look nicer and is ready for the recursive loop.
+- The cave style seems to work perfectly. There are absolutely no bugs
+  discovered so far. It looks really good, but it runs extremely slowly.
+- A filter now correctly removes unnecessary blockages between unconnected
+  hallways. Random noise is sometimes left, but this is fine since the dungeons
+  are supposed to be random anyway.
+- I pretty much removed the main bottleneck. dclone() isn't meant to be used
+  that way. Dungeon generation is fast and near as near to perfect as I could
+  hope to achieve for 0.3.3.
+- I fixed the cellular style. It no longer facilitates copy. Also, I've
+  determined that only one pass is sufficent. The extra variable is instead
+  used now to describe how much of the map is initially randomly filled.
+- I improved the Vault style slightly. For some mysterious reason which I don't
+  feel like pondering now, the A* pathfinding I integrated from my science fair
+  project failed to work, so I'll leave it for later.
+- The Cave style became the Dungeon style. Dungeon generation is acceptably
+  awesome for now.
+
+########################
+# 0.3.4 - Sun, June 25 #
+########################
+
+- I created two transform filters for areas: cellular automata and switch. They
+  both may be applied to any map to produce interesting effects. From brief
+  experimentation with this, the Building style was changed to be the Dungeon
+  style inverted slightly. Many other interesting styles may be experimented
+  with later.
+- I could not reproduce the bug where many levels of recursion in dungeon
+  generation resulted in errors, so no changes have been made. Obviously.
+- I determined that Character and Item definitions should be in the StdLib too.
+  The Standard Library is now very organized. Pre checks for actions are
+  logically stored with the actor.
+- Doors are completely implemented, as are the commands to manipulate them. The
+  only thing not yet created is the targetting system to choose which door to
+  open or close if there are two or more nearby.
+- Actors now have a Z coordinate describing their current level. $Game->{Levels}
+  contains the list.
+- Staircases and the ascend/descend commands have been implemented. Selection
+  of the appropriate new location isn't implemented or designed yet.
+- Finally the staircase connection code is implemented and supposedly working.
+- The addlevel interface was moved to $Game.
+- When venturing into undefined depths, a new dungeon is automagically
+  generated!
+- Random hotspots in rooms and hallways are recorded.
+- Staircases are randomly created in every dungeon. Thus, an infinite dungeon
+  in the test case. In accomplishing this, I fixed a fair few hotspot-related
+  bugs.
+- Apparently my super awesome container stacking systems sucks. I fixed it,
+  though, I think.
+- Fixed the chooserand() bug, sort of. There's a bug in random() or connect()
+  that I'll address later.
+- Names now work better with regards to quantity. But special cases aren't
+  dealt with.
+- The Player can now exit the dungeon.
+- For consistency, (Y, X) is always used, for everything.
+- Monsters are up and running... er, idling. But I have to set up a good,
+  proper way for them to enter and exit the global queue of actions. For now,
+  they're simply disabled completely.
+- Basic LOS design has been implemented, though I'm just experimenting at this
+  point.
+- The LOS system is much more clean now. I just need an algorithm.
+- A slight optimization. There's no need to render all the tiles on a
+  freshly generated structure; the map including it will do that later.
+- Removed the crufty LOS from the Engine. I'm trying out an alternative
+  technique for maintaining active monsters lists.
+- Fixed the queue bug. It was a bunch of stupid errors. The priority queue
+  needs an interface to accessing all defined elements.
+- Monsters seem to be correctly added and removed from the queue when moving
+  between levels, but the priority queue implementation itself seems to be
+  buggy. I might try to rewrite its implementation.
+- I replaced the priority queue implementation with a simple list and sort
+  routine. And here I was thinking my homegrown binary heap implementation that
+  I used in a science fair project was solid.
+- Monsters are only in the queue when they should be. Finally it works
+  correctly.
+- I fixed the hallway clearing code with a simple lookahead to ensure the mode
+  is correct if moving through a room.
+
+#######################
+# 0.3.5 - Fri, July 8 #
+#######################
+
+- After creating a fair few awesome monsters for DemoRL, I devised a good
+  content format and wrote a parser that correctly parses it.
+- The parsed data is now turned into actual objects.
+- Characters get their random stats if a range is specified.
+- Tweaked objects' initialization routines a bit.
+- Characters can now have default equipment. Nice!
+- Minor fixes regarding external content defining default equipment and
+  suppressing messages only during initialization routines.
+- A rather messy heck suppresses the message about staircases when ascending or
+  descending.
+- I simplified the map structures a bit. {Data} is pointless.
+- Doorways are randomly generated in corridors.
+- The player can now examine items in the inventory.
+- Buggy movement with flickering. Yay!
+- Something related to the bug where preprocessing isn't executed at runtime
+  has been causing the above 'flickering.' I fixed it by making queued actions
+  with an energy requirement of that of the amount needed for input execute
+  immediatly.
+- I fixed the above bug once and for all by placing the call to refresh the
+  display in a much better place.
+- I also made it impossible to close or open doors if a monster occupies the
+  tile.
+- Blank lines can now be displayed in the fullscreen panel.
+- Externally defined equipment is now properly loaded.
+- Attacks are going. Woo.
+- TP costs for attacks can now be defined externally.
+- Added a XdY style roll() function for calculations
+- Possessives in messages!
+- Added a random probability function that has a high or low tendency.
+- External content is a bit more flexible. Starting equipment is properly
+  assigned. Minor message bugs have been fixed.
+- Durability and all related aspects are implemented, except actual
+  depleciation. That's in attacks facilitating the equipment.
+- Somewhat balanced bonus modifiers for equipment!
+- roll() can now handle bases. XdY+-Z
+- The cellular automata style finally works the way I want it to!
+- I wrote a rating calculation for equipment.
+- The two standard attacks now work and wear away equipment. Damage isn't
+  applied yet, though, nor death.
+- take_damage(), death, stats on the statusbar...
+- Background delayed events and stat recovering!
+- Slightly more thorough examine routine for items.
+- Events can now be defined externally, though parsing has turned into some
+  fugly stuff.
+- Separated the parser from the monster/item routine and fixed some bugs.
+- The player can be defined externally!
+- Event definitions are greatly improved. My new technique, dubbed "delayed
+  symbolic resolution," does the job.
+- Yet another fugly hack to fix the fugliness of the init/instance system!
+- Fixed a minor, but annoying pre check bug in wear.
+- Hotspots are better chosen and organized. A delrand() utility function
+  does chooserand()'s job, but nukes the element as well.
+- A basic rarity setup, which is horribly unbalanced, is up and running.
+- The "splice on an active array" bug was apparently present in Monsters' die()
+  routine too. But I got it. I got it goooood.
+- Attack is now an event.
+- Experience, levelling up, cleanup on the statusbar UI, and some fixes.
+- The player learns techniques.
+- I removed the dependency on the too-recent ncurses panels. A console window
+  simply overlaps the other 3.
+- The technique system works. Selecting one, yeah!
+- Technique pre-checks... WORK!
+
+#########################
+# 0.3.6 - Tues, July 11 #
+#########################
+
+- Distance is fickle. The UI refresh routine marks down active monsters.
+- Capitalization for the first letter after puncutation marks.
+- Dungeon styles are refined and randomly selected.
+- A beautiful centered message box for scene intros and such. Padding, inverse
+  background, and left alignment. Spiffy.
+- Cleaned up some minor bugs in item loading, grouping, and so on.
+- The standard shoot attack and a corresponding trace() routine are in working
+  order.
+- The keymap is defiend externally. Took all of 90 seconds to code.
+- Blank lines now work in the message box.
+- Containers now have references to their owner. This fixes a few
+  inventory-related bugs.
+- I wrote a convenient switch weapon command.
+- No more fixed paths for loading content. The cwd is used instead.
+- The color wrap bug was fixed by me writing my own homegrown wrap routine! It
+  was eaiser than I though it'd be.
+- An amazing targetting system, generalized UI, and a way to examine monsters!
+  All in about 15 minutes work.
+
+#############
+# 0.3.7 - ? #
+#############

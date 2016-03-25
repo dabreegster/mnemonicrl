@@ -1,0 +1,62 @@
+package BDSM::DunGen::Building2;
+
+use strict;
+use warnings;
+use Util;
+
+use BDSM::DunGen::Shapes::Cloud;
+
+sub generate {
+  my ($class, $height, $width) = @_;
+  ($height, $width) = (20, 50);
+
+  my $map = BDSM::Map->new($height, $width, ".");
+  $map->border;
+  $map->{_Data}{superlight} = 1;
+  UI->start_in;
+  $map->fill([1, 1], [$height - 1, $width - 1], " ");
+
+  my ($y, $x) = ($height - 1, int $map->width / 2);
+  recurse($map, $y, $x);
+  UI->stop_in;
+
+  return $map;
+}
+
+my $iter = 0;
+sub recurse {
+  my ($map, $Y, $X) = @_;
+
+  my %clouds;
+  my @heap = ([$Y, $X]);
+  while (my $cloud = shift @heap) {
+    my ($y, $x) = @$cloud;
+    next unless $map->stfucheck($y, $x) and $map->get($y, $x) eq " ";
+    UI->{Main}->bindmap($map);
+    UI->{Main}->drawme;
+    UI->wait_input;
+
+    $map->mod($y, $x, ".");
+    $clouds{"$y,$x"} = 1;
+    my $build = 0;
+    if (percent(50)) {
+      $build = 1;
+      $map->mod($y - 1, $x - 1, "\\");
+      push @heap, [$y - 2, $x - 2];
+    }
+    if ($build == 0 or percent(40)) {
+      $map->mod($y - 1, $x + 1, "/");
+      push @heap, [$y - 2, $x + 2];
+    }
+  }
+
+  # Now make all %clouds backtrackable
+  my $new = 2;
+  # Choose a random cloud with a free spot to put a backtrack
+  foreach my $cloud (keys %clouds) {
+    my ($y, $x) = split(/,/, $cloud);
+
+  }
+}
+
+42;

@@ -1,0 +1,167 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Util;
+
+use Game::Attack;
+
+my @items;
+my %dat = (
+  corpse => {
+    Name     => "corpse",
+    Symbol   => "&",
+    Color    => "Black",
+    Descr    => "The flickering memory of a vanquished character in a dusty old story.",
+    Rank     => 0,
+    Category => "Mementos",
+    Init     => sub {
+      my ($self, $opts) = @_;
+      $self->{Name} = "corpse of " . delete($opts->{Of})->name;
+      return "Item";
+    }
+  },
+  incense => {
+    Base     => "SingleUse",
+    Name     => "incense stick",
+    Symbol   => "|",
+    Color    => "orange",
+    Descr    => "A thin stick of flavored incense.",
+    Rank     => 1
+  },
+  potion => {
+    Base     => "SingleUse",
+    Name     => "potion",
+    Symbol   => "!",
+    Color    => "purple",
+    Descr    => "A small bottle with a vile liquid swishing about. Drinking this might not
+                 be the best idea.",
+    Rank     => 1
+  },
+  hipflask => {
+    Name     => "hip flask",
+    Symbol   => "!",
+    Color    => "Green",
+    Rank     => 0,
+    Descr    => "Your trusty, dusty hip flask... at least you think it's yours. Scratching 
+                 at the worn plastic, you vaguely make out the inscription: 'Pete'. It's
+                 magically refilled, but the liquor inside would make even the Irish weep."
+    # cursed
+    # after drinking it, msg and effect
+  },
+  spyglass => {
+    Name   => "spyglass",
+    Symbol => "=",
+    Color  => "red",
+    Rank   => 0,
+    Descr  => "An extendable spyglass, worn from salty winds. It doesn't do anything for
+               your eyesight, but the brass tube does make for some conversation starters."
+  },
+  utilknife => {
+    Name   => "utility knife",
+    Symbol => "/",
+    Color  => "grey",
+    Rank   => 0,
+    Descr  => "A wicked cool utility knife jammed with hidden blades and sprockets
+               and doodads, positivey brimming with so much possibilty that you can't
+               conjure a single use for it. It's not even usable as a weapon!"
+  },
+  goggles => {
+    Name   => "brass goggles",
+    Symbol => "8",
+    Color  => "orange",
+    Rank   => 0,
+    Descr  => "A pair of welding goggles, modified with a spiderwork mesh and small gears."
+  },
+  webtrap => {
+    # TODO: can be activated a few times?
+    Base   => "SingleUse",
+    Name   => "web trap",
+    Symbol => "*",
+    Color  => "grey",
+    Rank   => 2,
+    Descr  => "A spiderweb fashioned with metallic reinforcements. Once placed on the
+              ground, it conceals itself until a victim steps nearby...",
+    Verb   => "lays",
+    Fxns => {
+      WhenUsed => sub {
+        my ($trap, $setter) = @_;
+
+        $setter->{Attacks}{webtrap} = Game::Attack->new(
+          Name   => "webtrap",
+          Range  => ["custom", sub { $setter }],
+          Damage => sub { random(5, 10) },
+          Msg    => "[the 1] stumbles into a spiderweb trap!",
+          Lag    => 0,
+          TmpAttack => 1
+        );
+
+        return unless GAME->fullsim;
+        my $tile = $setter->tile;
+        $tile->{OnEnter} = sub {
+          my (undef, $sucker) = @_;
+          $setter->attack("webtrap", $sucker);
+          delete $tile->{OnEnter}; # De-activate it
+        };
+      }
+    }
+  },
+  bombtrap => {
+    Base   => "SingleUse",
+    Name   => "bomb trap",
+    Symbol => "*",
+    Color  => "red",
+    Rank   => 5,
+    Descr  => "An antique bomb, small but lethal. Once placed, it will activate when the
+               fuse feels like running out.",
+    Verb   => "lays",
+    Fxns => {
+      WhenUsed => sub {
+        my ($trap, $setter) = @_;
+        $setter->{Attacks}{bombtrap} = Game::Attack->new(
+          Name      => "bombtrap",
+          Range     => ["area", 0, 3],
+          Damage    => sub { random(5, 10) },
+          Msg       => "The blast from a bomb trap engulfs [the 1]!",
+          Lag       => 0,
+          Draw      => ["`", "Red"],
+          TmpAttack => 1
+        );
+        return unless GAME->fullsim;
+        my @at = ($setter->{Y}, $setter->{X});
+        GAME->schedule(
+          -do    => sub {
+            $setter->attack("bombtrap", @at);
+            return "STOP";
+          },
+          -id    => "bombtrap_$trap->{ID}_$setter->{ID}",
+          -tags  => ["map", "bomb"],
+          -delay => random(3, 5)
+        );
+      }
+    }
+  }
+);
+
+while (my ($type, $dat) = each %dat) {
+  $dat->{Type} = $type;
+  $dat->{Category} ||= "Misc";
+  push @items, $dat;
+}
+
+# Finally, transform this data into real packages
+my @packages;
+foreach my $item (@items) {
+  my $type = delete $item->{Type};
+  my $package = "Game::Stuff::Item::$type";
+  push @packages, $package;
+  my $isa = "Game::StdLib::Item";
+  if (my $base = delete $item->{Base}) {
+    $isa = GAME->{Templates}{$base};
+  }
+  eval "package $package; our \@ISA = ('$isa');";
+  $package->announce($type);
+  $package->classdat(%$item);
+}
+
+@packages;

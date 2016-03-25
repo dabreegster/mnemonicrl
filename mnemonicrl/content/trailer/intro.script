@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+___SCRIPT OnLoad___
+my $map = shift;
+
+my $tunnel = GAME->{Templates}{Static}->new(
+  File   => "content/intro.tunnel",
+  Map    => $map,
+  Render => {
+    "*" => " "
+  }
+);
+$tunnel->blit_at(10, $_ * 150 + 80) for 0 .. 3;
+
+my $train = GAME->{Templates}{Blob}->new(Map => $map, At => [13, 0]);
+my $trainsprite = GAME->{Templates}{Sprite}->new(
+  Shapes => { default => '
+                                                          .-.
+                                 .-----.    _      .-.    [*]
+                                  `--.*|""""*""""""***""""***".
+                                  ___]*|-:--:--:--:--:--:--:--:(
+     /----------------------\|\'=\'|*[_9_[*:**:**:**:**:**:*****|
+     |-.___.--.___.--.___.--\'|___|___________________________.|\
+     \'-\-.-/==\-.-/==\-.-/--\'/   |*_.--.______.--.______.--._||*\
+        (o)    (o)    (o)           (==)      (==)      (==)=^;__\*
+  '},
+  Color => "red",
+  FloatingBlit => 1,
+  Render => {
+    "*" => " "
+  }
+);
+$train->omnomnom($trainsprite, 7, 0);
+my $smoke = GAME->{Templates}{Sprite}->new(
+  Shapes => { default => '
+              (@@@@@)     (@@@)                                     
+  (@@@@@@@)        (@@@@@@@)     (@@)                               
+    (@@@@@@@@@@@)       (@@@@@)   (@@@@@@@)                         
+(@@@)             (@@@@@@)   (@@@@@@@)     (@@@)                    
+              (@)                (@@@@@@)    (@@@@@@)               
+                             (@@)           (@@@@)  (@@@)           
+                                     (@@@)              (@@)        
+  '},
+  Color => "grey",
+);
+$train->omnomnom($smoke, 0, 0);
+GAME->{Player} = GAME->{Templates}{Player}->new;
+$train->omnomnom(Player, 11, 20);
+UI->{Main}->focus(Player, 0, 5);
+my $moon = GAME->{Templates}{Sprite}->new(
+  Shapes => { default => '
+              _.._
+            .\' .-\'`
+           /  /
+           |  |
+           \  \'.___.;
+            \'._  _.\'
+               ``
+  '},
+  Color => "white"
+);
+$train->omnomnom($moon, -11, 48);
+
+$train->{Methods}{intro} = sub {
+  my $self = shift;
+  unless ($self->e) {
+    return "STOP";
+  }
+  return 0.0; # Actually quick looks good.
+};
+$train->schedule(-id => "chuchu", -tags => ["map"], -do => "intro");
+
+
+# Give the poor lonely bugger some friends.
+my @pals;
+# Laggy if we nom them in the middle of the train, so be cheap
+push @pals, GAME->{Templates}{Character}->new(Color => "black") for 0 .. 5;
+$train->omnomnom($pals[$_], 22, 8 + $_) for 0 .. 5;
+
+GAME->narrate(
+  [],
+  0.5,
+  ["You might first clutch at anything warm and secure nearby,"],
+  2.5,
+  ["but there is nothing."],
+  2.0,
+  ["You can't recall how you got here, so you grasp next for your memory, then identity..."],
+  2.0,
+  ["That's gone, too."],
+  3.5,
+  sub {
+    foreach (@pals) {
+      $_->{Color} = UI->random_color;
+      $_->_bliton;
+    }
+  },
+  1.0,
+  ["From a world where symbols obscure all meaning"],
+  2.5,
+  ["and people filter through reality looking for hidden messages,"],
+  2.5,
+  ["comes a realm where only symbols exist,"],
+  3.0,
+  ["and reality is hidden between the lines instead."],
+  8.0
+);

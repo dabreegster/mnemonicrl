@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+
+UI->{Main}{OffY} = 70;
+UI->{Main}{OffX} = 35;
+
+GAME->{Map}->script("UbenWindows");
+
+my @lacuna;
+push @lacuna, GAME->{Templates}{Character}->new(Map => $map, At => $_, Color => "Black") for ([82, 58], [81, 59], [83, 59], [81, 61], [83, 61], [81, 63], [83, 63]);
+
+my $cnt = 0;
+GAME->schedule(
+  -id   => "march",
+  -tags => ["map"],
+  -do   => sub {
+    $_->w foreach @lacuna;
+    return $cnt++ == 35 ? "STOP" : 0.3;
+  }
+);
+
+GAME->narrate(
+  [],
+  0.5,
+  ["What is Lacuna?"],
+  2.5,
+  ["What do they have to do with the factories?"],
+  2.5,
+  [],
+  1.5,
+  sub { exit }
+);

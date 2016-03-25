@@ -1,0 +1,159 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Util;
+
+# Since it's easier to compare this way visually
+my @cols = (qw(Color Rank Power Accuracy));
+my @table = (
+  # Name                Color    Rank   Power    Accuracy
+  ["paperbagmask",    "orange",    1,      1,       -3],
+  ["pumpkinmask",     "orange",    1,      2,        1],
+  ["venetianmask",       "Red",    2,      3,       -1],
+  ["bugmask",          "Green",    2,      3,       -2],
+  ["clownmask",       "purple",    3,      1,        1],
+  ["operamask",        "white",    3,      4,        1],
+  ["shamanmask",        "Blue",    4,      3,       -2],
+  ["jestermask",      "Purple",    4,      5,        1],
+  ["fawkesmask",       "white",    5,      6,        2],
+  ["gasmask",          "green",    5,      8,       -1],
+  ["surgicalmask",     "white",    6,      4,        2],
+  ["plaguemask",        "cyan",    6,      7,        1],
+  ["eyepatchmask",      "Cyan",    6,      2,        5],
+  ["weldingmask",       "grey",    7,      8,       -1],
+  ["tinfoilmask",      "white",    7,      5,        4],
+  ["kitsunemask",        "red",    7,      9,        3],
+  ["yinyangmask",      "Black",    7,      7,        4],
+  ["vrmask",            "grey",    8,      7,       -3],
+  ["reddeathmask",       "red",    9,      9,       -1],
+);
+
+my %dat = (
+  paperbagmask => {
+    Name       => "paper bag mask",
+    Descr      => "A simple brown paper bag with eyeholes cut out. Your visibility is
+                   severely reduced in this, obviously, and quite frankly it would look
+                   ridiculous on anybody, so the exact reason for its existence is
+                   unclear."
+    # reduces FOV
+  },
+  pumpkinmask => {
+    Name       => "pumpkin head mask",
+    Descr      => "A carved pumpkin suitable for a mask. A strong odor remains, suggesting
+                   the presence of some guts inside. Squishy."
+  },
+  venetianmask => {
+    Name       => "Venetian carnival mask",
+    Descr      => "An elaborate Venetian carnival mask, fashioned with lurid colors and
+                   trimmed feathers."
+  },
+  bugmask => {
+    Name       => "bug head mask",
+    Descr      => "A grotesquely oversized insectoid head, with unblinking bug eyes and
+                   absurd antennae."
+  },
+  clownmask => {
+    Name       => "clown face-paint mask",
+    Descr      => "A quick-kit of clown face paint, which you can apply and take off for as
+                   long as you have the carnie spirit."
+  },
+  operamask => {
+    Name       => "opera mask",
+    Descr      => "A plain yet elegant white half-mask, suitable for a night at the opera."
+  },
+  shamanmask => {
+    Name       => "shaman mask",
+    Descr      => "A hollow tribal shaman's mask, with an eerie sound echoing out of the
+                   base."
+  },
+  jestermask => {
+    Name       => "jester mask",
+    Descr      => "A brightly decorated jester's mask, complete with bells."
+  },
+  fawkesmask => {
+    Name       => "Guy Fawkes mask",
+    Descr      => "Remember remember the fifth of November... by wearing this Guy Fawkes
+                   mask."
+  },
+  gasmask => {
+    Name       => "gas mask",
+    Descr      => "A bulky old gas mask, with a long hose and filter."
+  },
+  surgicalmask => {
+    Name       => "surgical mask",
+    Descr      => "This surgical mask is just a thin strip of white cloth tied around the
+                   mouth, but its ominous aura is clear."
+  },
+  plaguemask => {
+    Name       => "Medico Della Peste mask",
+    Descr      => "The mask of the medieval plague doctor, with a long, curved beak."
+  },
+  eyepatchmask => {
+    Name       => "eyepatch mask",
+    Descr      => "A simple black eyepatch, able to be fitted over either eye."
+  },
+  weldingmask => {
+    Name       => "welding mask",
+    Descr      => "An industrial-grade welding mask, able to be quickly flipped on and off
+                   of the face."
+  },
+  tinfoilmask => {
+    Name       => "tin foil mask",
+    Descr      => "For the utterly paranoid, the tin foil mask is an effective means of
+                   dispelling both thought-leeching and thought-provoking events."
+    # cant use abilities?
+  },
+  kitsunemask => {
+    Name       => "kitsune mask",
+    Descr      => "A traditional Japanese fox mask, painted white and red with exaggerated
+                   eye sockets."
+  },
+  yinyangmask => {
+    Name       => "yin-yang mask",
+    Descr      => "A curious creation of duality and balance, the yin-yang mask's eye
+                   sockets are cut so that you may only see with one eye at a time. Who
+                   knows what a perspective swap might bring."
+    # swaps damage taken for something else? for damage dealt?
+  },
+  vrmask => {
+    Name       => "cyberpunk VR mask",
+    Descr      => "A Virtual Reality helmet that may or may not accurately portray what's
+                   going on around you, if that's to be trusted in the first place."
+  },
+  reddeathmask => {
+    Name       => "Mask of Red Death",
+    Descr      => "The legendary Mask of Red Death, a clear warning of deadly plague to
+                   anybody who sees its scaly visage. Wearing it may enact some strange
+                   effects."
+    # cant die with it?
+  },
+);
+
+my @items;
+foreach my $entry (@table) {
+  my $type = shift @$entry;
+  return "no item data for $type" unless $dat{$type};
+  $dat{$type}->{Type} = $type;
+  for (0 .. $#cols) {
+    my $attrib = $cols[$_];
+    $dat{$type}->{$attrib} = $entry->[$_];
+  }
+  push @items, delete $dat{$type};
+}
+if (%dat) {
+  return ["item dat not in table", keys %dat];
+}
+
+# Finally, transform this data into real packages
+my @packages;
+foreach my $mask (@items) {
+  my $type = delete $mask->{Type};
+  my $package = "Game::Stuff::Mask::$type";
+  push @packages, $package;
+  eval "package $package; our \@ISA = ('Game::StdLib::Item::Equipment::Mask');";
+  $package->announce($type);
+  $package->classdat(%$mask);
+}
+
+@packages;

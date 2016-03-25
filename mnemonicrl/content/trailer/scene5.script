@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+UI->{Main}{OffY} = 80;
+UI->{Main}{OffX} = 0;
+
+# Riders
+GAME->{Templates}{Character}->new(Map => $map, At => [89, 50], Color => UI->random_color);
+GAME->{Templates}{Character}->new(Map => $map, At => [99, 13], Color => UI->random_color);
+
+GAME->narrate(
+  [],
+  1.0,
+  ["Relax into your new lifestyle, make new friends"],
+  2.0,
+  [],
+  2.0,
+  sub { exit }
+);

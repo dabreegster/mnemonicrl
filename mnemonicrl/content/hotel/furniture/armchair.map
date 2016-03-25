@@ -1,0 +1,27 @@
+LAYER1
+   .      .   
+              
+              
+              
+              
+              
+LAYER2
+    ======    
+  (| *  * |)  
+   | *  * |   
+ ()--------() 
+||/========\||
+||==========||
+LAYER3
+,,,,grey,grey,grey,grey,grey,grey,,,,,
+,,grey,grey,,grey,,,grey,,grey,grey,,,
+,,,grey,,grey,,,grey,,grey,,,,
+,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+LAYER4
+$VAR1 = {
+          '_Data' => {
+                       'MkStairs' => undef
+                     }
+        };

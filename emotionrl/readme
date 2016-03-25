@@ -1,0 +1,77 @@
+Welcome to EmotionRL, the first game made with my Perl roguelike engine! I'm
+extremely proud of this creation and everything the project has taught me. I
+started the PerlRL engine last summer to distract myself from lessons of life I 
+wasn't ready to face, and now I continue it to understand those lessons.
+EmotionRL's content itself was created in less than a month. I have had a great
+deal of fun working on this project.
+
+EmotionRL is a strange first game. As the name suggests, the game is centered
+around a theme that hasn't really been explored in roguelikes before. All the
+inspiration has come from my own personal experiences. There is something of a
+story. The ending scene, which is very special to me, was based on and includes
+a poem I wrote.
+
+I release the PerlRL engine and the EmotionRL code under the GNU GPL. You can
+take the code, modify it, improve it, and attempt to understand it, but if you
+redistribute it, you must keep it under these terms. The PerlRL engine isn't
+really ready for a real game to be written with it (besides EmotionRL, of
+course), but it'll be there soon. I don't see why PerlRL would harm you or your
+PC in any way, but if it happens, I'm not responsible. You should probably let
+me know though.
+
+This is very important: The only thing that I will not allow to be reproduced
+in any form is my poem in the end scene. It's split up into several parts, most
+of which are marked off with quotes. This is my original creation, so hands
+off.
+
+To play EmotionRL, you need Perl and a Curses library, basically. The demorl
+script should be run for anything that can handle a shell script. I hope it's
+playable under Windows by means of pdcurses, but I can't guarantee this. I have
+Perl 5.8.8, but 5.6 might work. You need the following modules: Exporter, Cwd,
+Data::Dumper, and Curses. All should be in your standard Perl distribution
+except for perhaps Curses.
+
+Run demorl, not emotionrl. The former will intelligently capture annoying errors
+that would otherwise mess up the ncurses display and log them. Please send any
+errors to me over IRC or by posting on rec.games.roguelike.development. If
+you're on a platform that doesn't like shell scripts, then just point your Perl
+interpreter at emotionrl.
+
+You should play EmotionRL in a terminal at least around 80x25. Some things on
+the statusbar might wrap over, but they shouldn't affect gameplay.
+
+EmotionRL takes two options on the command line, which can be combined in any
+order. The first, --nocolor, disables color. On my 500Mhz box, the game runs
+smoothly enough. If the flicker is too annoying, try the game without color,
+though it lessens the gameplay somewhat. Also, at the start of the game, you
+have to wade through the introduction to the plot, some instructions, and an
+opening room filled with equipment. After you're familiar and bored with this,
+pass the --fast option to skip it.
+
+For the game to balance properly, you should try to kill most of the monsters
+on a level. You learn some pretty awesome attacks, but only if you gain levels!
+
+If you absolutely can't win the game (It's *ONLY* 20 levels!), use the debug
+command. The key defaults to 'D.' It'll take you straight to the ending. I
+don't recommend this if you haven't given the game a fair try yet. Having said
+that, I really want to hear feedback on the ending, so just make sure you watch
+it and get the 'right' ending, one way or another.
+
+Ah, you were probably wondering about the massive 200KB file. I decided to make
+a sort of logo or intro screen for EmotionRL. My sister made the sign and took
+the picture. The shot features the Love and Fortune cards from my tarot deck,
+some lemongrass incense, a random dragon figurine that I guess represents the
+dream-like quality of EmotionRL, the peace stone in the game (It really
+exists!), the bear my (ex)-girlfriend gave me for Valentine's Day, a lava lamp,
+some somewhat trippy curtains, and of course the dreamcatcher that my sister
+gave me.
+
+Please send me all comments, questions, bugs, and feedback. You can post on
+rec.games.roguelike.development, find me on irc.freenode.net as dabreegster, or
+message me on AIM as thebreegster.
+
+Enjoy!
+
+Just to reward you for reading this far (I hope), here's an awesome tip: Once
+you're Good or Perfect at the Tears of Rage attack and an enemy is far from a
+wall... Well, have fun. SPLAT!

@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+GAME->{Map}->script("UbenSign");
+
+UI->{Main}{OffY} = 10;
+UI->{Main}{OffX} = 101;
+
+GAME->{Map}->script("UbenWindows");
+
+GAME->narrate(
+  [],
+  0.5,
+  ["When is Cyphen really"],
+  4.5,
+  sub { exit }
+);

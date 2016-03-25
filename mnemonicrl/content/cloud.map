@@ -1,0 +1,31 @@
+LAYER1
+           ########     ###  ### 
+         ###      ####### #### ##
+  ########                      #
+  #                            ##
+  ######                      ## 
+     ###                    ###  
+     ####     ###############    
+        #######                  
+LAYER2
+           .,,'''.       ,    ,  
+          /'      `,-'''' `,,, `,
+   ,..-'''                      .
+  (                            ,'
+   `-.__                      ,` 
+     ,-'                    ,'   
+     `-`,     ,``-.......--'     
+         `,,,'                   
+LAYER3
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,white,
+LAYER4
+$VAR1 = {
+          '_Data' => undef
+        };

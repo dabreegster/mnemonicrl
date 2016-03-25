@@ -1,0 +1,485 @@
+<new PlayerChar>
+Name: Player
+Desc: It's... YOU!
+Str: 4..6
+Def: 2..3
+HP: 10..13
+TP: 2..3
+{After, list} (Static=1): <(
+  if ($Player->tile->{_} eq "*") {
+    say "The breeze is gentle here, its breath lulling you into a serene calm.";
+    say "The ocean is before you.";
+  }
+)>
+{Before, ascend} (Static=1): <(
+  my $self = shift;
+  if ($self->g("Z") == 0) {
+    say "You're not giving up this easily.";
+    return -1;
+  } elsif ($self->g("Z") == 21) {
+    say "No... Don't focus on the past anymore.";
+    return -1;
+  }
+)>
+{After, go} (Static=1): <(
+  # We should be deleted immediatly after one use!
+  my $self = shift;
+  if ($self->g("Z") == 0 and $self->g("Y") == 8 and $self->g("X") == 21) {
+    unless ($Player->{Ready}) {
+      $Game->{UI}->msgbox(1,
+        "Ready?"
+      );
+      $Game->{UI}->msgbox(2);
+      $Player->{Ready}++;
+    }
+  }
+  return 1;
+)>
+{Before, descend} (Static=1): <(
+  my $self = shift;
+  if ($self->g("Z") == 20) {
+    # Load the end scene's map and populate it with the appropriate objects.
+    $Game->addlevel("<cliff");
+    # Set up some stuff.
+    my $map = $Game->{Levels}[-1]{Map};
+    $map->[30][21]{_} = "<";
+    $Game->{Levels}[-1]{StairsUp}[0] = [30, 21];
+    render($map->[30][21]);
+    $map->[9][7]{_} = ">";
+    $Game->{Levels}[-1]{StairsDown}[0] = [9, 7];
+    render($map->[9][7]);
+    $map->[12][21]{Inv}->add($Game->{Content}{"your heart"}->new);
+    render($map->[12][21]);
+  } elsif ($self->g("Z") == 21) {
+    # They chose the bad choice... Aww.
+    $Game->{UI}->msgbox(1,
+      "You secure your heart under your arm, and return to your reality."
+    );
+    $Game->{UI}->msgbox(1,
+      "Breeg's Note: Your rather PITIFUL reality, I should say. I mean, geez.
+       Why would you pick this path? Now you don't get a profound ending!"
+    );
+    $Game->{UI}->msgbox(1,
+      "You awaken to a nasty storm. The dreamcatcher above your head sways
+       angrily, as if disappointed. You feel rather cold, but you'll probably be       feeling like that a lot now."
+    );
+    $Game->{UI}->msgbox(1,
+      "Isometric Boredom... That hideous beast within you, the one you failed
+       to destroy... It continues to rule your life."
+    );
+    $Game->{UI}->msgbox(1,
+      "You lose."
+    );
+    $Player->exit(1);
+  }
+  return 1;
+)>
+{After, descend} (Static=1): <(
+  my $self = shift;
+  if ($self->g("Z") == 21) {
+    # Cutscene time!
+    $Game->{Messages} = [];
+    # First walk north till we reach the heart.
+    foreach my $step (1 .. 18) {
+      if ($step == 1) {
+        $Game->{UI}->msgbox(1,
+          "You arrive on a peaceful little pathway. In the distance you can
+           hear the ocean."
+        );
+      } elsif ($step == 3) {
+        $Game->{UI}->msgbox(1,
+          "Hang on. What's that feeling...?"
+        );
+        $Game->{UI}->msgbox(1,
+          "It's almost as if you can begin to feel your stagant imagination
+           begin to work again..."
+        );
+      } elsif ($step == 7) {
+        $Game->{UI}->msgbox(1,
+          "You reflect upon your journey."
+        );
+      } elsif ($step == 9) {
+        $Game->{UI}->msgbox(1,
+          "Finally, the words begin to flow..."
+        );
+        $Game->{UI}->msgbox(1,
+          "\"Three years past,",
+          "Farther away than before.",
+          "Not mere memories,",
+          "But a tapestry of feeling.",
+          "Hate, pain, agony...",
+          "Fused with bliss, euphoria, understanding. Love.",
+          "Gethsemane, Purgatory, Hell...",
+          "All one Heaven.",
+          "Feet in the sky, head on the ground.",
+          "Heart in the sea.",
+          "Drifting, standing, fighting?",
+          "It's for God to decide.",
+          "Arms outstretched, loving the world.",
+          "Feet kicking the inevitable away.",
+          "Why deal with it today?\""
+        );
+      } elsif ($step == 11) {
+        $Game->{UI}->msgbox(1,
+          "Hmm... Why indeed..."
+        );
+        $Game->{UI}->msgbox(1,
+          "\"You reach down, pick it up, and look at it.",
+          "",
+          "Chaos, meaninglessness?",
+          "All you can see is a pattern.",
+          "Exiles? Punishment? Torture?",
+          "Lessons. Your God loves you.",
+          "The squiggles, the smears, the archaic runes.",
+          "A language you can now start to read.",
+          "",
+          "The search of an infinite void,",
+          "Seeking what sometimes seems to be there.",
+          "It always remains, hiding just within.",
+          "The Abyss, an impossible maze.",
+          "Demons waiting, taunting, killing.",
+          "And all you had to do was evoke the love.\""
+        );
+        $Game->{UI}->msgbox(1,
+          "\"Unarmed? Appreciate the vulnerability.\""
+        );
+        if (my $weapon = $Player->g("Equipment.Weapon")) {
+          $Game->{UI}->msgbox(1,
+            "You stop to unwield your weapon. You feel safer, somehow."
+          );
+          $Player->unequip($weapon);
+          $Player->drop($weapon);
+          $Game->{UI}->msgbox(2);
+          select(undef, undef, undef, 1.0);
+          $Game->{UI}->msgbox(1,
+            "You drop it, too. You won't be needing it any longer."
+          );
+        }
+        $Game->{Messages} = [];
+        $Game->{UI}->msgbox(1,
+          "\"Burdened? Shrug trouble off.",
+          "Depressed? Laugh.\"",
+        );
+        $Game->{UI}->msgbox(1,
+          "..."
+        );
+        $Game->{UI}->msgbox(1,
+          "...Loved?"
+        );
+        $Game->{UI}->msgbox(1,
+          "Love."
+        );
+        $Game->{UI}->msgbox(1,
+          "\"Why'd you confuse a river and an ocean?",
+          "You did need a current.",
+          "You dove deep, but found only the shallow end.",
+          "Are you ready for the depth and vastness,",
+          "Of a real ocean? Of larger fish?",
+          "",
+          "Lessons. Your deity taught you to swim, to hold onto an anchor.",
+          "And to sail free, into the horizon.",
+          "But most of all, you have learned...",
+          "That love is worth the agony of death.",
+          "(Resurrection is just a phase.)\""
+        );
+        $Game->{UI}->msgbox(1,
+          "\"The river has reached the end.",
+          "The end? The ocean.",
+          "And on the shore, some equipment to take along...",
+          "A crate of laughter, a ship's log of memories.",
+          "And a crew of friends.\"",
+        );
+        $Game->{UI}->msgbox(1,
+          "\"Hahahaha! Junior high has been one spectacular voyage.\""
+        );
+      } elsif ($step == 14) {
+        $Game->{UI}->msgbox(1,
+          "Hmm... So what is that thing then?"
+        );
+      }
+      $Player->move_n;
+      $Game->{UI}->msgbox(2);
+      select(undef, undef, undef, 0.5);
+      if ($step == 18) {
+        $Game->{UI}->msgbox(1,
+          "\"...What's this? Your heart?",
+          "You tossed it into the sea, but it came back. You sent it out,
+           trusting the sea, but it came back raw and bloody. Again. Oh.",
+          "",
+          "Well...\""
+        );
+        $Player->get($Player->tile->{Inv}->get(0));
+        $Game->{Messages} = [];
+        say "You take your heart.";
+        $Game->{UI}->msgbox(2);
+        select(undef, undef, undef, 0.5);
+        $Game->{UI}->msgbox(1,
+          "Breeg's Note: Sorry to interrupt the mood here. In case you're
+          unsure of what's going on here... Basically you have to make a
+          decision about what to do based on what you've learned from this
+          adventure. Good luck! (By the way, dropping your heart on that yellow
+          * tile by the sea is the equivalent of throwing your heart into the
+          sea. I just didn't feel like programming in another action.)"
+        );
+        $Game->{UI}->msgbox(2);
+      }
+    }
+  }
+)>
+Symbol: yellow @
+{When, Player, gainlevel} (Static=1): <(
+  my $self = shift;
+  # Basically we teach the Player... an attack!
+  my $level = $self->g("Level");
+  my ($tech, $desc, $check);
+  if ($level == 2) {
+    $tech = "IncenseBlast";
+    $desc = "You can use incense like a wand to blast a row of enemies!";
+    $check = sub {
+      my $self = shift;
+      # Are we... WIELDING incense?
+      if ($self->g("Equipment.Weapon.Base.ID") == $Game->{Content}{incense}{ID})
+      {
+        # Oh, good. Aim... where?
+        my $choices = { map { $_ => $_ } qw(h j k l y u b n) };
+        my $where = $Game->{UI}->selectchoice(
+          $choices, "Aim your incense blast where? (hjklyubn)"
+        );
+        return -1 if $where eq -1;
+        return (-42, "attack", "IncenseBlast", $where);
+      } else {
+        # OK... Hrmm. Do we *have* incense?
+        my $incense;
+        # Unfortunately, if we drop 'e' and 'f' is incense...
+        foreach ("a" .. "z", "A" .. "Z") {
+          my $obj = $Player->{Inv}->get($_);
+          next unless $obj;
+          $incense = $obj, last if $obj->g("Base.ID") == $Game->{Content}{incense}{ID};
+        }
+        if ($incense) {
+          $self->schedule(1, $self->queue("IncenseBlast"), "equip");
+          return (-42, "wield", $incense);
+        } else {
+          say "You have no incense to use!";
+          return -1;
+        }
+      }
+    };
+  } elsif ($level == 4) {
+    $tech = "ChinUp";
+    $desc = "You're skinny, and, for almost all of your life, weak. Around the time of the break-up, you learned to perform chin-ups. You're up to about 15 a set now, and you feel <white>strong<grey>.";
+    $check = sub {
+      # Nothing we have to do... just redirect! Yay!
+      return (-42, "attack", "ChinUp");
+    };
+  } elsif ($level == 6) {
+    $tech = "BlockEmotions";
+    $desc = "At your old school, you survived by masking all feelings. Try it here.";
+    $check = sub {
+      # Nothing we have to do... just redirect! Yay!
+      return (-42, "attack", "BlockEmotions");
+    };
+  } elsif ($level == 9) {
+    $tech = "TearsRage";
+    $desc = "Cry me a river, they say? If they're not going to help, then why bother you? Bug off!";
+    $check = sub {
+      my $self = shift;
+      my $choices = { map { $_ => $_ } qw(h j k l y u b n) };
+      my $where = $Game->{UI}->selectchoice(
+        $choices, "Aim your tears where? (hjklyubn)"
+      );
+      return -1 if $where eq -1;
+      return (-42, "attack", "TearsRage", $where);
+    };
+  } elsif ($level == 11) {
+    $tech = "Meditate";
+    $desc = "...Or simply relax and focus your energy.";
+    $check = sub {
+      my $self = shift;
+      # Are we... WIELDING incense?
+      if ($self->g("Equipment.Weapon.Base.ID") == $Game->{Content}{incense}{ID})
+      {
+        # Oh, good. Enough?
+        if ($self->g("Equipment.Weapon.Qty") >= 3) {
+          return (-42, "attack", "Meditate");
+        } else {
+          say "You do not have enough incense to meditate!";
+          return -1;
+        }
+      } else {
+        # OK... Hrmm. Do we *have* incense?
+        my $incense;
+        # Unfortunately, if we drop 'e' and 'f' is incense...
+        foreach ("a" .. "z", "A" .. "Z") {
+          my $obj = $Player->{Inv}->get($_);
+          next unless $obj;
+          $incense = $obj, last if $obj->g("Base.ID") == $Game->{Content}{incense}{ID};
+        }
+        if ($incense) {
+          if ($incense->g("Qty") >= 3) {
+            $self->schedule(1, $self->queue("Meditate"), "equip");
+            return (-42, "wield", $incense);
+          } else {
+            say "You do not have enough incense to meditate!";
+            return -1;
+          }
+        } else {
+          say "You have no incense to use!";
+          return -1;
+        }
+      }
+      # Nothing we have to do... just redirect! Yay!
+      return (-42, "attack", "Meditate");
+    };
+  } elsif ($level == 14) {
+    $tech = "EvokeLove";
+    $desc = "What power lies within yourself? Is it the simple, yet beautiful thing which you cannot comprehend?";
+    $check = sub {
+      my $self = shift;
+      my $choices = { map { $_ => $_ } qw(h j k l y u b n) };
+      my $where = $Game->{UI}->selectchoice(
+        $choices, "Focus your love where? (hjklyubn)"
+      );
+      return -1 if $where eq -1;
+      return (-42, "attack", "EvokeLove", $where);
+    };
+  }
+  return 1 unless $tech;
+  # Letter?
+  my $letter;
+  foreach ("a" .. "z", "A" .. "Z") {
+    $letter = $_;
+    last unless $self->g("Techniques.$letter");
+  }
+  $self->{Techniques}{$letter} = {
+    Name => $tech,
+    Success => 1,
+    Desc => $desc,
+  };
+  $self->{Checks}{$tech} = $check;
+  $self->msg("<Aqua>[subj] learn $tech!");
+  return 1;
+)>
+Equipment: magic peace talisman (Amulet)
+{After, equip} (Static=1): <(
+  say "<Purple>Haha, nice equipment.";
+  return 1;
+  # Hmm... we're said silently at startup. Only nuke it if Silence is 0?
+)>
+Attacks:
+  IncenseBlast (2): <(
+    my ($self, $direction) = @_;
+    # Distance is a factor.
+    # Get target. Singular.
+    my @targets = $self->g("Area")->trace(
+      $self->g("Z"),
+      $self->g("Y"),
+      $self->g("X"),
+      $direction,
+      1
+    );
+    $self->g("Equipment.Weapon")->destroy;
+    unless (@targets) {
+      $self->msg("The incense fades away.");
+      return -1;
+    }
+    foreach my $target (@targets) {
+      # Distance is a factor.
+      my $distance = abs($self->{Y} - $target->{Y}) + abs($self->{X} - $target->{X});
+      my $damage = roll("2d4+5") - $distance;
+      if ($damage > 0) {
+        $self->msg("The incense scorches away $damage HP from [1]!", $target);
+        $target->take_damage($damage);
+      } else {
+        $self->msg("[1] seems to enjoy the gentle fragrance of the incense.", $target);
+      }
+    }
+    # Wield old weapon... later.
+    return 1;
+  )>
+  ChinUp (6): <(
+    my $self = shift;
+    my $orig = $self->g("Str");
+    $self->{Str} = $orig * 2;
+    my $num = random(13, 16);
+    $self->msg("[subj] perform a quick set of $num chin-ups on a bar that randomly appeared.");
+    $self->delayevent($num, sub {
+      $self->{Str} = $orig;
+      $self->msg("The physical exhileration of defying gravity wears off.");
+      return 1;
+    });
+    return 1;
+  )>
+  BlockEmotions (10): <(
+    # make HP go really high for a while, then permanently nuke a bit of it
+    my $self = shift;
+    my $orig = $self->g("MaxHP");
+    $self->{HP} = $orig * 2;
+    $self->{MaxHP} = $orig * 2;
+    $self->msg("You begin to disregard every feeling you feel.");
+    $self->delayevent(15, sub {
+      my $new = $orig - random(5, 8);
+      $self->{HP} = $new;
+      $self->{MaxHP} = $new;
+      $self->msg("Human weakness once again begins to take an effect on you.");
+      if ($self->{HP} > 0) {
+        $self->msg("The barrier has left you permanently weakened.");
+      } else {
+        $self->msg("You wanted no emotions... Now you can find out if there are any left, when you wake up...");
+        $self->die;
+      }
+      return 1;
+    });
+    return 1;
+  )>
+  TearsRage (15): <(
+    my ($self, $direction) = @_;
+    # Get target. Singular.
+    my $target = ($self->g("Area")->trace(
+      $self->g("Z"),
+      $self->g("Y"),
+      $self->g("X"),
+      $direction
+    ))[0];
+    unless ($target) {
+      $self->msg("Your wave of tears drifts away.");
+      return -1;
+    }
+    # Place them on the tile before the first barrier.
+    my $method = "move_D$direction";
+    my $damage = 0;
+    while (1) {
+      $damage += random(1, 3);
+      last if $target->$method == -1;
+      $Game->{UI}->refresh;
+    }
+    $self->msg("The flood of tears rushes [1] against a wall, slamming away $damage HP.", $target);
+    $target->take_damage($damage);
+    return 1;
+  )>
+  Meditate (20): <(
+    my $self = shift;
+    $self->{HP} = $self->g("MaxHP");
+    $self->{TP} = $self->g("MaxTP");
+    $self->msg("[subj] light some incense and relax.");
+    $self->g("Equipment.Weapon")->destroy for 1 .. 3;
+    return 1;
+  )>
+  EvokeLove (30): <(
+    my ($self, $direction) = @_;
+    # Get target. Singular.
+    my $target = ($self->g("Area")->trace(
+      $self->g("Z"),
+      $self->g("Y"),
+      $self->g("X"),
+      $direction
+    ))[0];
+    unless ($target) {
+      $self->msg("Powerful feelings rush through you, but you can't find anything to focus them on..");
+      return -1;
+    }
+    $self->msg("[subj] focus the flood of profound feelings onto [1].", $target);
+    $target->take_damage($target->g("HP"));
+    return 1;
+  )>
+</>

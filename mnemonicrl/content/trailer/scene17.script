@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+
+UI->{Main}{OffY} = 5;
+UI->{Main}{OffX} = 0;
+
+UI->eyecandy("eye");
+
+GAME->narrate(
+  [],
+  0.5,
+  ["Who -- or what -- is lurking in the clocktower?"],
+  3.5,
+  [],
+  1.0,
+  sub { exit }
+);

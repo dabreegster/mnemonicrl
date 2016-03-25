@@ -1,0 +1,35 @@
+LAYER1
+     
+     
+     
+     
+     
+     
+     
+     
+LAYER2
+  _  
+ / \ 
+/___\
+  |  
+  |  
+  |  
+  |  
+_/-\_
+LAYER3
+,,grey,,,
+,grey,,grey,,
+grey,grey,grey,grey,grey,
+,,grey,,,
+,,grey,,,
+,,grey,,,
+,,grey,,,
+grey,grey,grey,grey,grey,
+LAYER4
+$VAR1 = {
+          '_Data' => {
+                       'superlight' => 1,
+                       'MkStairs' => undef,
+                       'Effects' => {}
+                     }
+        };

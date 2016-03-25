@@ -1,0 +1,238 @@
+# Rank 2 Equipment (Weak)
+
+<new Armour>
+Name: trenchcoat
+Desc: It's a black trenchcoat, from the Matrix!
+Symbol: Blue [
+Power: 3d2+3
+MaxMod: 4
+Durability: 5000
+Rank: 2
+</>
+
+<new Armour>
+Name: Perl t-shirt
+Desc: You had a white t-shirt imprinted with an image of a camel in Perl code
+      quite some time ago. From then on, everybody recognized it as "the camel
+      shirt." On the back proudly emblazoned is the Perl motto: There's more
+      than one way to do it.
+Symbol: white [
+Power: 3d4+3
+MaxMod: 7
+Durability: 500
+Rank: 2
+</>
+
+<new Weapon>
+Name: laser tag gun
+Desc: It appears to be a normal laser tag gun connected to no vest. It beeps,
+      so it must be functioning. Thankfully there doesn't seem to be a fire
+      button, so your thumb won't get worn out.
+Symbol: Red /
+Power: 4d4+2
+Durability: 1
+Rank: 2
+MaxMod: 4
+Ranged: 1
+</>
+
+<new Weapon>
+Name: rat flail
+Desc: Wow... Is your friend influencing your dreams? Straight out of that comic
+      he loves to read is a long chain with a splattered rat corpse on the end.
+      The tip, consisting of a blackened rat tooth, seems to be sharp enough.
+Symbol: Orange /
+Power: 3d10+1
+Durability: 50
+Rank: 2
+MaxMod: 3
+</>
+
+<new Weapon>
+Name: pitchfork
+Desc: A rather unremarkable pitchfork, like you'd see in Spencer's.
+Symbol: red /
+Power: 5d2+3
+Durability: 200
+Rank: 2
+MaxMod: 6
+</>
+
+<new Weapon>
+Name: trout
+Desc: It's a trout! Like from mIRC! Though you use irssi these days, you can
+      never resist a good ol' troutslap.
+Symbol: green /
+Power: 3d7+1
+Durability: 80
+Rank: 2
+MaxMod: 7
+</>
+
+<new Weapon>
+Name: feather mace
+Desc: It's a short stick with what seem to be Native American ceremonial
+      feathers on the end.
+Symbol: purple /
+Power: 2d10
+Durability: 130
+Rank: 2
+MaxMod: 8
+</>
+
+<new Weapon>
+Name: spoon
+Desc: It's a... um... spoon. Haha?
+Symbol: grey /
+Power: 7d3+3
+Durability: 350
+Rank: 2
+MaxMod: 3
+</>
+
+<new Weapon>
+Name: walking staff
+Desc: Hey, it's your old walking stick from when you used to camp! Just the
+      right height for you, and it's even got that curious snake-shaped handle!
+Symbol: blue /
+Power: 2d9-3
+Durability: 20
+Rank: 2
+MaxMod: 2
+</>
+
+<new Weapon>
+Name: needle blade
+Desc: A blade this deadly-looking MUST be a work of evil...
+Symbol: orange /
+Power: 7d2+6
+Durability: 250
+Rank: 2
+MaxMod: 5
+</>
+
+# Rank 1 Equipment (Tough)
+
+<new Weapon>
+Name: wheel of Fortuna
+Desc: This curious vibrating disc almost seems to be alive. It quivers in your
+      grip and seems to have a fond, boomerang-like attachment for you. Engraved
+      upon its surface are medieval images depicting the fickle nature of Fate. 
+      From time to time, you almost catch yourself hearing lines of Carl Orff's
+      Carmina Burana from the direction of the disc.
+Symbol: Blue /
+Power: 2d15+8
+Durability: 200
+Rank: 1
+MaxMod: 9
+Ranged: 1
+</>
+
+<new Weapon>
+Name: incense spear
+Desc: It's a short stick... but the tip, though sharp, is glowing and spouting
+      profuse amounts of smoke. You can smell many flavors: peppermint,
+      lemongrass, frankincense, mur, and a minty one that reminds you of that
+      time in the theatre with her... Anyway, though it's constantly burning,
+      it doesn't seem to wear away at the stick, which is lucky because it
+      looks like it could do a fair bit of damage if you could get it wedged
+      into an enemy.
+Symbol: Green /
+Power: 8d5+5
+Durability: 150
+Rank: 1
+MaxMod: 8
+</>
+
+<new Weapon>
+Name: lava lamp sword
+Desc: This is the most psychedelic blade you've ever seen! The base where the
+      bulb usually is seems to function now as a handle. Globs of multicoloured
+      stuff flow through it, rising to the tip, which seems to have been
+      converted into a freakishly sharp point.
+Symbol: Purple /
+Power: 10d10+10
+Durability: 300
+Rank: 1
+MaxMod: 10
+</>
+
+<new Weapon>
+Name: strobe light gun
+Desc: This small strobe light has been fitted with a comfortable handle. It's
+      capable of rapidly pulsing up to 25 flashes per second! Better not stare
+      into this thing for too long!
+Symbol: white /
+Power: 25d2
+Durability: 1
+Rank: 1
+MaxMod: 1
+Ranged: 1
+</>
+
+<new Armour>
+Name: Isometric Boredom t-shirt
+Desc: Your second custom-made shirt is black with a curious symbol and quote
+      embedded: Isometric Boredom... It won't last. What is Isometric Boredom?
+      You believe it to be the "long dark teatime of the soul," that horrible
+      duration in which despair prevailed.
+Symbol: Purple [
+Power: 6d8+4
+MaxMod: 5
+Durability: 3000
+Rank: 1
+</>
+
+# Rank 0 Equipment (Never generated)
+
+<new Amulet>
+Name: magic peace talisman
+Desc: You found this little magic stone at a New Age shop a few weeks ago.
+      Since then, its message of "World Peace" has kept you company every hour
+      as your first lucky charm. Squeezing it always did seem to help you to
+      make calm, balanced decisions. Perhaps here it could allow you to channel
+      something more!
+Symbol: red %
+# Symbol doesn't really matter...
+{Before, Player, unequip, magic peace talisman} (Static=1): <(
+  say "But what if you need it somewhere in here?";
+  return -1;
+)>
+# Again, this stuff is irrelevant.
+MaxMod: 0
+Rank: 0
+</>
+
+<new Helmet>
+Name: crown of thorns
+Desc: Really, the time leading up to the breakup was the worst. The constant
+      pressure to against your judgements, the confusion about your best
+      friend flirting with her, and of course the constant nagging agony of
+      worry. Suffer.
+Symbol: Red }
+{Before, Character, unequip, crown of thorns} (Static=1): <(
+  say "No. Through suffering comes understanding.";
+  return -1;
+)>
+{After, Character, equip, crown of thorns} (Static=1): <(
+  my $self = shift;
+  shift;
+  my $crown = shift;
+  $crown->delayevent(2, sub {
+    # PAAAAAAAAAIN.
+    $self->msg("[1] digs into [subj].", $crown);
+    $self->take_damage(random(10, 15));
+    return -42;
+  });
+  # Be nice... schedule removal.
+  $crown->delayevent(18, sub {
+    $self->msg("Finally... Someboy has shown mercy for [subj]. [1] incinerates.", $crown);
+    $crown->destroy;
+    return 1;
+  });
+  return 1;
+)>
+MaxMod: 0
+# Irrelevant... ^ and ,
+Rank: 0
+</>

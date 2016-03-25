@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+___SCRIPT OnLoad___
+my $map = shift;
+
+# Clock tower face
+GAME->make("Animated",
+  Filler => 1,
+  Map   => $map,
+  At    => $_,
+  Color => "white",
+  File  => "content/hotel/washer.anim",
+  Delay => 0.2,
+  Tags  => ["washer", "map"]
+) for [7, 40], [6, 48], [7, 56], [11, 39], [12, 47], [11, 55], [16, 41], [16, 49], [16, 57];

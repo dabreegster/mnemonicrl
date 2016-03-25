@@ -1,0 +1,164 @@
+#!/usr/bin/perl
+___SCRIPT OnLoad___
+my $map = shift;
+
+CFG->set(Snow => "Light");
+
+# Clock tower face
+GAME->make("Animated",
+  Filler => 1,
+  Map   => $map,
+  At    => [16, 41],
+  File  => "content/cyphen.clockhands",
+  Color => "Purple",
+  Delay => 0.2,
+  Tags  => ["hands", "map"]
+);
+GAME->make("Animated",
+  Filler => 1,
+  Map   => $map,
+  At    => [16, 41],
+  File  => "content/cyphen.clockhands",
+  Color => "Red",
+  Delay => 0.2,
+  Cycle => "reverse",
+  Shape => 1,
+  Tags  => ["hands", "map"]
+);
+
+# Sign change
+# Input to these callbacks is WHEN, WHO, HEAP
+$map->{Map}[90][98]{OnEnter} = $map->{Map}[90][99]{OnEnter} = $map->{Map}[90][100]{OnEnter}
+  = $map->{Map}[87][98]{OnEnter} = $map->{Map}[87][99]{OnEnter}
+  = $map->{Map}[87][100]{OnEnter} = sub { $map->script("Sign", "wrong", $_[1]) };
+
+$map->{Map}[86][98]{OnEnter} = $map->{Map}[86][99]{OnEnter} = $map->{Map}[86][100]{OnEnter}
+  = $map->{Map}[91][98]{OnEnter} = $map->{Map}[91][99]{OnEnter}
+  = $map->{Map}[91][100]{OnEnter} = sub { $map->script("Sign", "right", $_[1]) };
+
+$map->{_Data}{sign} = 1;
+
+# Who knows what state we're starting in
+if ($map->{_Data}{state} eq "Uben") {
+  $map->script("Sign", "right");
+  $map->script("Windows");
+  $map->script("River");
+  $map->script("Smokestacks");
+}
+
+
+
+___SCRIPT Transition___
+my $map = shift;
+
+# In the middle of a transition? Bad ;)
+GAME->unschedule(-tags => ["transition"]);
+
+$map->{_Data}{state} = $map->{_Data}{state} eq "Cyphen" ? "Uben" : "Cyphen";
+if (GAME->server) {
+  my @who = grep { $_->{Aggregate}{Map}{Depth} eq "Cyphen" } values %{ GAME->{Clients} };
+  GAME->sendto($_->{ClientID}, ["mapscript", "Transition"]) foreach @who;
+} else {
+  msg game => "Welcome to $map->{_Data}{state}...";
+  my $shift = $map->{_Data}{sign} ? "wrong" : "right";
+  $map->{_Data}{sign} = !$map->{_Data}{sign};
+  $map->script("Sign", $shift);
+  $map->script("Windows");
+  $map->script("River");
+  $map->script("Smokestacks");
+}
+
+
+___SCRIPT Sign___
+my ($map, $which, $agent) = @_;
+return unless !$agent or $agent->player;
+# Don't overwrite the sign with the same thing
+if ($which eq "right") {
+  return unless $map->{_Data}{sign};
+} else {
+  return if $map->{_Data}{sign};
+}
+$map->{_Data}{sign} = $which eq "wrong";
+
+my $uben = $map->{_Data}{state} eq "Uben";
+$uben = !$uben if $which eq "wrong";
+my @sign = $uben ? (" ", "U", "b", "e", "n", " ") : ("C", "y", "p", "h", "e", "n");
+$map->mod(84, $_, "symbol", $sign[$_ - 97], "Red") for 97 .. 102;
+
+
+___SCRIPT Windows___
+my $map = shift;
+
+my @windows = @{ $map->{Feature}{window} };
+GAME->schedule(
+  -id   => "windows",
+  -tags => ["map", "transition"],
+  -do   => sub {
+    for (1 .. 2) {
+      return "STOP" unless @windows;
+      my $window = splice(@windows, random(0, $#windows), 1);
+      my $color = $map->{_Data}{state} eq "Cyphen" ? "yellow" : "Black";
+      $map->mod(@$window, "symbol", "_", $color);
+    }
+    UI->{Main}->drawme;
+    return 0.5;
+  }
+);
+
+___SCRIPT River___
+
+my $map = shift;
+my ($from, $color);
+if ($map->{_Data}{state} eq "Cyphen") {
+  ($from, $color) = ("ubenflood", "blue");
+} else {
+  ($from, $color) = ("flood", "Red");
+}
+$map->flood(
+  -tags      => ["transition"],
+  -from      => $map->{Feature}{$from},
+  -dir       => "orthog",
+  -each_node => sub {
+    my ($map, $y, $x) = @_;
+    my $feature = $map->tile($y, $x)->{Feature} // "";
+    $map->mod($y, $x, "symbol", "~", $color) unless $feature eq "fakeflood";
+  },
+  -delay     => .05,
+  -valid     => sub {
+    my $tile = shift;
+    return 1 if $tile->{_} eq "~" or ($tile->{Feature} and $tile->{Feature} =~ m/flood/);
+    return;
+  }
+);
+
+___SCRIPT Smokestacks___
+my $map = shift;
+
+my $stop = $map->{_Data}{state} eq "Uben" ? "fire" : "greenfire";
+
+# Stop the old
+GAME->unschedule(-tags => [$_]) for ("spawn_$stop", "spawn_smoke");
+# Prevent the old, too
+foreach my $fx (values %{ $map->{Rectangles} }) {
+  next unless $fx->{Effect};
+  next unless $fx->{Effect} eq $stop or $fx->{Effect} eq "smoke";
+  $fx->{Paused} = 1;
+}
+
+GAME->schedule(
+  -id   => "changefire",
+  -tags => ["ui", "map", "transition"],
+  -do    => sub {
+    # Cancel any remaining move_fx events, just cause they dont need to still run.
+    GAME->unschedule(-tags => [$_]) for ("move_$stop", "move_smoke");
+    # And light up the new...
+    if ($stop eq "fire") {
+      UI->eyecandy("greenfire");
+    } else {
+      UI->eyecandy("fire");
+      UI->eyecandy("smoke");
+    }
+    return "STOP";
+  },
+  -delay => 1.5,
+);

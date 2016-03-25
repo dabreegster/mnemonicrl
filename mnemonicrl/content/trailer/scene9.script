@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Medium");
+
+UI->{Main}{OffY} = 11;
+UI->{Main}{OffX} = 40;
+
+GAME->narrate(
+  [],
+  0.2,
+  ["still here?"],
+  3.5,
+  sub { exit }
+);

@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+package Game::Stuff::Artist;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Artist");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Artist",
+  Affinity => "ART",
+  Wielding => "pencil",
+  Descr    => "An Artist, hair and skin and clothes splattered with a variety of paints.
+               Their skills are just as colorful; if an Artist does not like what they see,
+               they might just change it...",
+
+  Stats => {
+    HP       => 6,
+    HP_Rate  => 1,
+    Str      => 2,
+    Def      => 2,
+    Dext     => 4,
+    ESM      => 4,
+    ESM_Rate => 1
+  },
+  Speed     => 1,
+  ExpCurve  => 1.6,
+);
+
+# abilities:
+# painting tulpas/allies/enemies into existence from palette of memories
+# change surroundings
+# change enemy
+# use medium/easel/paper to wrap/bind
+# create puppet allies
+
+
+# special items:
+# palette, collecting memories like colors?
+
+42;

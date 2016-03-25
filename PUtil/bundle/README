@@ -1,0 +1,4 @@
+All code in here belongs to somebody else on CPAN, but nothing in their license section
+seemed to indicate that it couldn't be distributed with something else that's freely
+modifiable. I'm only bundling these so source users don't have to install extra
+dependencies.

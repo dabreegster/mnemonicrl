@@ -1,0 +1,135 @@
+Constant subroutine POE::Kernel::CATCH_EXCEPTIONS redefined at ../HexedUI/Interface.pm line 7.
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+ACT) Animated__content/hotel/washer.anim is doing go: On, After
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+  Animated__content/hotel/washer.anim is calling ON_go
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 53.
+ACT) Animated_-1_content/hotel/washer.anim is doing go: On, After
+  Animated_-1_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-2_content/hotel/washer.anim is doing go: On, After
+  Animated_-2_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-3_content/hotel/washer.anim is doing go: On, After
+  Animated_-3_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-4_content/hotel/washer.anim is doing go: On, After
+  Animated_-4_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-5_content/hotel/washer.anim is doing go: On, After
+  Animated_-5_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-6_content/hotel/washer.anim is doing go: On, After
+  Animated_-6_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-7_content/hotel/washer.anim is doing go: On, After
+  Animated_-7_content/hotel/washer.anim is calling ON_go
+ACT) Animated_-8_content/hotel/washer.anim is doing go: On, After
+  Animated_-8_content/hotel/washer.anim is calling ON_go
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 41.
+Use of uninitialized value in hash element at ../perlrl/PerlRL/Component/View.pm line 42.
+Use of uninitialized value $sym in ord at ../HexedUI/Hexed/Map.pm line 90.
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 62.
+ACT) Animated_-7_content/hotel/washer.anim is doing transform: On, After
+  Animated_-7_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-5_content/hotel/washer.anim is doing transform: On, After
+  Animated_-5_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-2_content/hotel/washer.anim is doing transform: On, After
+  Animated_-2_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-8_content/hotel/washer.anim is doing transform: On, After
+  Animated_-8_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-3_content/hotel/washer.anim is doing transform: On, After
+  Animated_-3_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-6_content/hotel/washer.anim is doing transform: On, After
+  Animated_-6_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-1_content/hotel/washer.anim is doing transform: On, After
+  Animated_-1_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-4_content/hotel/washer.anim is doing transform: On, After
+  Animated_-4_content/hotel/washer.anim is calling ON_transform
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+ACT) Animated__content/hotel/washer.anim is doing transform: On, After
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+  Animated__content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-7_content/hotel/washer.anim is doing transform: On, After
+  Animated_-7_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-5_content/hotel/washer.anim is doing transform: On, After
+  Animated_-5_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-2_content/hotel/washer.anim is doing transform: On, After
+  Animated_-2_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-8_content/hotel/washer.anim is doing transform: On, After
+  Animated_-8_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-3_content/hotel/washer.anim is doing transform: On, After
+  Animated_-3_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-6_content/hotel/washer.anim is doing transform: On, After
+  Animated_-6_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-1_content/hotel/washer.anim is doing transform: On, After
+  Animated_-1_content/hotel/washer.anim is calling ON_transform
+ACT) Animated_-4_content/hotel/washer.anim is doing transform: On, After
+  Animated_-4_content/hotel/washer.anim is calling ON_transform
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+ACT) Animated__content/hotel/washer.anim is doing transform: On, After
+Use of uninitialized value in concatenation (.) or string at ../perlrl/BDSM/Agent/Animated.pm line 91.
+  Animated__content/hotel/washer.anim is calling ON_transform

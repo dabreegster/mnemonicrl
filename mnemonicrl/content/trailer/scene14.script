@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+UI->{Main}{OffY} = 0;
+UI->{Main}{OffX} = 35;
+
+GAME->{Templates}{Character}->new(Map => $map, At => [random(41, 44), random(67, 87)], Color => UI->random_color) for 1 .. 20;
+GAME->{Templates}{Character}->new(Map => $map, At => [random(37, 53), random(133, 154)], Color => UI->random_color) for 1 .. 20;
+
+GAME->narrate(
+  [],
+  0.5,
+  ["There are three types of people in Cyphen..."],
+  2.5,
+  ["Those who just wait for their memory"],
+  2.5,
+  [],
+  4.0,
+  ["Those who form a new identity"],
+  4.0,
+  sub {
+    # March, LOTR!
+    my @army;
+    push @army, GAME->{Templates}{Character}->new(Map => $map, At => $_, Color => UI->random_color) for ([51, 100], [53, 102], [53, 98], [55, 96], [55, 104]);
+
+    my $cnt = 0;
+    GAME->schedule(
+      -id   => "march",
+      -tags => ["map"],
+      -do   => sub {
+        $_->n foreach @army;
+        return $cnt++ == 15 ? "STOP" : 0.7;
+      }
+    );
+  },
+  0,
+  ["And a select few..."],
+  3.0,
+  sub {
+    GAME->unschedule(-id => "spawnsnow");
+  },
+  0,
+  ["Who see past the smokescreen"],
+  3.0,
+  [],
+  1.0,
+  sub { exit }
+);

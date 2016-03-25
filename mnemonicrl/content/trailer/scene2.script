@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+UI->{Main}{OffY} = 40;
+UI->{Main}{OffX} = 7;
+
+GAME->narrate(
+  [],
+  0.5,
+  ["Don't worry, there's plenty of time to see everything..."],
+  4.5,
+  sub {
+    GAME->unschedule(-tags => ["hands"]);
+  },
+  0.5,
+  ["Right?"],
+  3.0,
+  sub { exit }
+);

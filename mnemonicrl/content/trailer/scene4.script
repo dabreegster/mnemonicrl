@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+GAME->{Player} = GAME->{Templates}{Player}->new(Map => $map, At => [82, 155], Color => "Green");
+Player->trekpath("content/trailer/scene4.path");
+
+GAME->narrate(
+  [],
+  0.5,
+  ["No need to work, nor to worry... Cyphen has no money."],
+  2.5,
+  [],
+  1.5,
+  ["The Bank takes interest..."],
+  3.5,
+  ["just not in you."],
+  2.0,
+  sub { exit }
+);

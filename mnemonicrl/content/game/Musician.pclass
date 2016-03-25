@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+package Game::Stuff::Musician;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Musician");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Musician",
+  Affinity => "MUS",
+  Wielding => "guitarstring",
+  Descr    => "A finely-dressed Musician, with combed hair and long, skinny fingers. Their
+               movement is precise and synchronized.",
+
+  Stats => {
+    HP       => 6,
+    HP_Rate  => 1,
+    Str      => 2,
+    Def      => 4,
+    Dext     => 4,
+    ESM      => 2,
+    ESM_Rate => 1
+  },
+  Speed     => 0,
+  ExpCurve  => .9
+);
+
+# enchant
+# soundburst
+# devils trill
+# o fortuna
+
+42;

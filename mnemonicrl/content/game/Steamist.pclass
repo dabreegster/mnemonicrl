@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+package Game::Stuff::Steamist;
+
+use strict;
+use warnings;
+use Util;
+
+use base "Game::StdLib::Character::Player";
+__PACKAGE__->announce("Steamist");
+
+use Game::Attack;
+
+__PACKAGE__->classdat(
+  Class    => "Steamist",
+  Affinity => "STM",
+  Wielding => "watergun",
+  Descr    => "A Steamist of stocky build, with spiky hair. Their thick muscles hoist up a 
+               variety of guns and fiercesome weaponry. ",
+
+  Stats => {
+    HP       => 7,
+    HP_Rate  => 1,
+    Str      => 4,
+    Def      => 2,
+    Dext     => 4,
+    ESM      => 1,
+    ESM_Rate => 2
+  },
+  Speed     => 1,
+  ExpCurve  => 2.0,
+);
+
+# thumbs up, forefinger forward. best gun is imagination
+# reload in battle = heal?
+
+42;

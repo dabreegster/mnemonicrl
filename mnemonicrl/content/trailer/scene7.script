@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+UI->{Main}{OffY} = 0;
+UI->{Main}{OffX} = 60;
+
+GAME->narrate(
+  [],
+  0.5,
+  ["And don't mind the factories, they're just there for show, really..."],
+  3.5,
+  [],
+  2.5,
+  sub {
+    CFG->set("Snow" => "Medium");
+  },
+  0,
+  ["But for all the fun, you can't quite manage to forget why you're waiting..."],
+  5.5,
+  ["After all, nobody in Cyphen has recovered their memory for as long as anybody can remember..."],
+  5.5,
+  [],
+  3.5,
+  ["They say that for every factory window still lit,"],
+  3,
+  [],
+  3,
+  sub { exit }
+);

@@ -1,0 +1,1206 @@
+# Rank 3 Monsters (Weak)
+
+<new Monster>
+Name: emoticon
+Desc: Its exuberant grin merely masks a life of immaturity and a rather
+      nasty-looking spiked tongue. It looks like this: <Red>:P<grey>.
+Str: 3..6
+Def: 5..8
+HP: 10..20
+TP: 5..10
+Rank: 3
+Attacks:
+  TongueSlash (2): <(
+    # Adjacent only.
+    my ($self, $enemy) = @_;
+    # Always hit.
+    my $damage = 2 + random(3, $self->g("Str"));
+    # Disregard armour. Gets you in the face.
+    $self->msg("[1P] slimy, spiked tongue slithers out and catches you across the face, delivering $damage damage!", $self, $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+  AnnoyingLaugh (3): <(
+    # Annoys you, preventing next attack. Anywhere in vicinity.
+    my ($self, $enemy) = @_;
+    $enemy->react(
+      to => ["Before", "attack"],
+      when => 1,
+      by => sub {
+        $enemy->msg("[subj] [are/is] too overcome with giggles!");
+        return -1;
+      }
+    );
+    $self->msg("[subj] emits an annoying, high-pitched laugh that really bugs [1].", $enemy);
+    $enemy->{Laughing}++;
+    # Remove reaction in 3 turns.
+    $enemy->delayevent(3, sub {
+      $enemy->msg("[subj] pull yourself together.");
+      $enemy->eventoff;
+      $enemy->{ModeLaugh} = 0;
+      $enemy->{Laughing}--;
+      return 1;
+    });
+    $enemy->{ModeLaugh} = 1;
+    return 1;
+  )>
+Symbol: Red P
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.TongueSlash.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to slip away...") if $run;
+    $self->msg("[subj] turns around, facing you with a bright grin.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance == 1) {
+    @results = $self->_attack("TongueSlash", $Player);
+  } else {
+    # Wait, should we disable their attacks first?
+    if ($run == 0 and $Player->g("ModeLaugh") == 0 and percent(10))
+    {
+      @results = $self->_attack("AnnoyingLaugh", $Player);
+      goto RESULTS;
+    }
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 2
+</>
+
+<new Monster>
+Name: code bug
+Desc: You spent hours questioning your sanity over this one. Though it was
+      finally fixed, it returns in your nightmare as an oversized pulsating
+      worm-like organism.
+Str: 2..4
+Def: 4..6
+HP: 15..20
+TP: 7..10
+Rank: 3
+Attacks:
+  InduceHeadache (3): <(
+    # Lowers TP. anywhere.
+    my ($self, $enemy) = @_;
+    my $tp = random(3, 5);
+    $enemy->{TP} -= $tp;
+    $enemy->{TP} = 0 if $enemy->{TP} < 0;
+    $self->msg("Gah! <white>Why<grey> is that bloody value uninitialized?! This is hurting [1P] head!", $enemy);
+    return 1;
+  )>
+  LeechConcentration (5): <(
+    # Adjacent
+    my ($self, $enemy) = @_;
+    my $damage = int((15 * $self->g("Str") * $enemy->g("HP")) / 100);
+    $self->{HP} += $damage;
+    $self->{HP} = $self->g("MaxHP") if $self->{HP} > $self->g("MaxHP");
+    $self->msg("[subj] leeches $damage HP from [1].", $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+Symbol: green b
+Init: <(
+  my $self = shift;
+  $self->delayevent(5, sub {
+    my $x = random(50, 400);
+    my $method = chooserand(qw(go move eat equip wield levelup die destroy));
+    say chooserand(
+      "<red>Use of uninitialized value in hash key on line $x!",
+      "<red>Can't call method $method on undefined object at line $x!",
+      "<red>You just suck as a programmer. Haha.",
+      "<red>Error: Data::Dumper's debug routine is randomly deciding not to <red>work, probably because of something you've done."
+    ) if $Game->{Active}{ $self->{ID} };
+    return -42;
+  });
+)>
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.InduceHeadache.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to slip away...") if $run;
+    $self->msg("[subj] turns around, a programming error facing up to a programmer.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance == 1) {
+    @results = $self->_attack("LeechConcentration", $Player);
+  } else {
+    # Wait, should we leech TP?
+    if ($Player->g("TP") > 2 and percent(50)) {
+      @results = $self->_attack("InduceHeadache", $Player);
+      goto RESULTS;
+    }
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 4..6
+</>
+
+#<new Monster>
+#Name: monotony
+#Desc: The endless summer days drag on and on, melting into one another...
+#      Everything is always the same. Where is the sacred inspiration in your
+#      life now? Back in reality, the only way you ever overcame this was by
+#      physically pushing yourself to the limit with chin-ups or swimming. You
+#      might have to do the same here.
+## If in the presence of one, Techniques may not be used.
+#Str: 0
+#Def: 6..10
+#HP: 5..15
+#TP: 0
+#Rank: 3
+##Attacks: None!
+#Symbol: white M
+#Equipment:
+#Exp: 5..8
+#</>
+
+<new Monster>
+Name: penguin
+Desc: Aw, what's a cute, lovable little stuffed Tux doing here in-- OH. It's
+      teeth are a bit sharp, its red eyes fix you to one spot, and why's it
+      holding that pitchfork...?
+Str: 7..12
+Def: 6..10
+HP: 15..27
+TP: 0
+Rank: 3
+#Attacks: None!
+Symbol: red l
+Equipment: pitchfork (Weapon)
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  # We're simple. If we're adjacent, attack. If not, move towards the player.
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  if ($distance == 1) {
+    @results = $self->_weapon_attack($Player);
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ((!defined $far) or $ourdistance < $far) {
+        ($Y, $X) = ($y, $x);
+        $far = $ourdistance;
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 10..15
+</>
+
+<new Monster>
+Name: joke
+Desc: Somehow you trust that it's just a joke, but why is she so malicious?
+Str: 3..7
+Def: 4..7
+HP: 10..19
+TP: 0
+Rank: 3
+# Throw is an attack?! OK, sure.
+Attacks:
+  Throw: <(
+    # USE MONSTER SHOOOOOOOOOOOT ROUTINEY? Nah, we always hit
+    my ($self, $enemy) = @_;
+    # Animation! Later.
+    my $damage = random(2, $self->g("Str"));
+    $enemy->msg("Ow! [1] pelts [subj] with a jawbreaker. It hurts in a deeper way than merely costing you $damage HP.", $self);
+    $enemy->take_damage($damage);
+    # Pretend we actually used one...
+    $enemy->tile->{Inv}->add($Game->{Content}{jawbreaker}->new);
+    return 1;
+  )>
+Symbol: aqua j
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.Throw.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to slip away...") if $run;
+    $self->msg("[subj] turns around, babbling a random Bash.org joke.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance < 5) {
+    @results = $self->_attack("Throw", $Player);
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 4..8
+</>
+
+<new Monster>
+Name: teddy bear
+Desc: The teddy bear she got you for Valentine's Day represents the time when
+      everything was beautiful, before she had changed. It says "Hug me." How
+      you wish you could. But this bear's eyes are dull and lifeless, and its
+      claws are probably used for anything except affection.
+Str: 4..9
+Def: 3..5
+HP: 9..17
+TP: 5..9
+Rank: 3
+Attacks:
+  Hug (4): <(
+    # Makes you drop your weapon if wielding one. adjacent.
+    my ($self, $enemy) = @_;
+    my $damage = int($self->g("Str") * 1.5);
+    $damage -= $enemy->g("Equipment.Armour")->rating if $enemy->g("Equipment.Armour");
+    # Deduct durability from equipment
+    $enemy->g("Equipment.Armour")->diminish if $enemy->g("Equipment.Armour");
+    if ($damage > 0) {
+      $self->msg("[subj] hugs [1], squeezing away $damage HP.", $enemy);
+      $enemy->take_damage($damage);
+    } else {
+      $self->msg("[subj] hugs [1], but you feel no weaker.", $enemy);
+    }
+    if (my $weapon = $enemy->g("Equipment.Weapon")) {
+      $Game->{Silence} = 1;
+      $enemy->unequip($weapon);
+      $enemy->drop($weapon);
+      $Game->{Silence} = 0;
+      $enemy->msg("[subj] fumble with [1P] [2], dropping it.", $enemy, $weapon);
+    }
+    return 1;
+  )>
+  Claw (2): <(
+    # Adjacent
+    my ($self, $enemy) = @_;
+    my $damage = 3 + random(4, $self->g("Str") * 1.5);
+    $damage -= $enemy->g("Equipment.Armour")->rating if $enemy->g("Equipment.Armour");
+    # Deduct durability from equipment
+    $enemy->g("Equipment.Armour")->diminish if $enemy->g("Equipment.Armour");
+    if ($damage > 0) {
+      $self->msg("[1P] claw tears into [2], scratching off $damage HP!", $self, $enemy);
+      $enemy->take_damage($damage);
+      return 1;
+    } else {
+      $self->msg("[1P] claw fails to scratch [2].", $self, $enemy);
+      return -1;
+    }
+  )>
+Symbol: orange B
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.Claw.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to slip away...") if $run;
+    $self->msg("[subj] turns around, begging you to hug it.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance == 1) {
+    if ($self->g("TP") >= 4) {
+      @results = $self->_attack("Hug", $Player);
+    } else {
+      @results = $self->_attack("Claw", $Player);
+    }
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 6..9
+</>
+
+# Rank 2 (Medium)
+
+<new Monster>
+Name: BSOD
+Desc: You are reminded of your unpleasant days using Windows. This hovering
+      beast is a portal straight into philosophies you don't support.
+Str: 10..15
+Def: 9..15
+HP: 30..50
+TP: 5..15
+Rank: 2
+Attacks:
+  OpenWindow (4): <(
+    # Summon code bugs, anywhere
+    my ($self, $enemy) = @_;
+    # How many spaces adjacent to enemy are open?
+    my $map = $enemy->g("Area");
+    my @spaces = ();
+    foreach my $y ($enemy->{Y} - 1 .. $enemy->{Y} + 1) {
+      foreach my $x ($enemy->{X} - 1 .. $enemy->{X} + 1) {
+        push @spaces, [$y, $x] unless $map->barrier($y, $x) or $map->{Map}[$y][$x]{Char};
+      }
+    }
+    unless (@spaces) {
+      $self->msg("[subj] fails to open a window.");
+      return -1;
+    }
+    $self->msg("[subj] opens a window to the world of proprietary software.");
+    # How many bugs to summon?
+    foreach (0 .. random(1, $#spaces)) {
+      my ($y, $x) = ( @{ delrand(\@spaces) } );
+      $Game->{Content}{"code bug"}->new(
+        Z => $enemy->g("Z"),
+        Y => $y,
+        X => $x
+      );
+      say "A code bug appears!";
+    }
+    return 1;
+  )>
+  Crash (0): <(
+    # self-destruct, rush to PC. activates when near-dead.
+    my ($self, $enemy) = @_;
+    # Don't worry about GETTING there, y'know?
+    my $damage = $self->g("HP") * $self->g("Str");
+    $self->msg("[subj] rushes blindly towards [1], self-destructing. Crash!", $enemy);
+    $enemy->take_damage($damage);
+    # BSOD dies, now.
+    $self->die(1);
+    return 1;
+  )>
+  Freeze (2): <(
+    # Self-explanatory, adjacent. Damage and paralysis.
+    my ($self, $enemy) = @_;
+    my $damage = roll("$self->{Str}d5+3");
+    $enemy->react(
+      to => ["Before", "go"],
+      when => 1,
+      by => sub {
+        $enemy->msg("[subj] [are/is] frozen!");
+        return -1;
+      }
+    );
+    $enemy->delayevent(3, sub {
+      $enemy->msg("[subj] dethaw.");
+      $enemy->eventoff;
+      return 1;
+    });
+    $self->msg("[subj] freezes [1]!", $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+Symbol: Blue W
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # About to die?
+  if ($self->g("HP") <= 10 and percent(60)) {
+    @results = $self->_attack("Crash", $Player);
+    goto RESULTS;
+  }
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.Freeze.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to drift away...") if $run;
+    $self->msg("[subj] swivels around.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance == 1) {
+    @results = $self->_attack("Freeze", $Player);
+  } else {
+    # Wait, should we summon bugs?
+    if ($self->g("TP") >= 4 and percent(50)) {
+      @results = $self->_attack("OpenWindow", $Player);
+      goto RESULTS;
+    }
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 15..20
+</>
+
+<new Monster>
+Name: memory
+Desc: All you can recall here in this place are bittersweet endings, pointless
+      beginnings, good things dying, and bad things being nurtured.
+Str: 6..12
+Def: 8..14
+HP: 25..35
+TP: 10..16
+Rank: 2
+Attacks:
+  Reminisce (4): <(
+    # Print random memory and deduct HP. ne ware.
+    my ($self, $enemy) = @_;
+    my $damage = roll("3d$self->{Str}");
+    say chooserand(
+      "\"I... I think you're beautiful.\" \"What? Haha, I just fell out of my chair! You probably shouldn't have told me that...\"",
+      "\"I'm serious, if you get attached to me, you'll get hurt.\" \"I don't care, I'll face anything for you.\"",
+      "\"Did you tell him to flirt with you?\" \"You have to be assertive!\"",
+      "\"WOW... Nicole asked me to the dance!!!\""
+    );
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+Symbol: red M
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.Reminisce.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] quietly starts to slip away...") if $run;
+    $self->msg("[subj] turns around, reminding you of second chances.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance < 5) {
+    @results = $self->_attack("Reminisce", $Player);
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 14..17
+</>
+
+#<new Monster>
+#Name: regret
+#Desc: She liked you... But you were still ensnared by the plague of your past.
+#  Now she's your best friend, but she's in pain that could've been avoided if
+#  you had only said yes...
+#Str: 7..15
+#Def: 10..14
+#HP: 17..27
+#TP: 9..14
+#Rank: 2
+#Attacks:
+#  WhatIf (6): <(
+#    # An illusion that you said yes. But a problem arises, and you don't have
+#    # the experience from a lesson to deal with it.
+#    # This is a toughie. wossit actually do?
+#  )>
+#Symbol: purple X
+#Equipment:
+#Exp: 12..17
+#</>
+
+#<new Monster>
+#Name: false dream
+#Desc: With summer days melting into one another, how can you expect to keep a
+#      grip on reality? Isn't it easier to believe these tempting, beautiful
+#      untruths?
+#Str: 6..12
+#Def: 9..14
+#HP: 20..30
+#TP: 11..17
+#Rank: 2
+#Attacks:
+#  Illusion: <(
+#    # Creates false idling pc that speaks. Attacking hurts you, talk to it.
+#  )>
+#  ConfusionBeam: <(
+#    # HP--
+#  )>
+#Symbol: Purple D
+#Equipment:
+#Exp: 14..19
+#</>
+
+<new Monster>
+Name: white rabbit
+Desc: Hippity-hop, hippity-hop... Just looking at this thing is making you
+      trip. Jefferson Airplane fills your head, distracting you from the Monty
+      Python-style teeth. Whip out the Holy Hand Grena-- Ask Alice how to beat
+      it. But only when she's ten feet tall...
+Str: 12..16
+Def: 10..16
+HP: 28..36
+TP: 7..19
+Rank: 2
+Attacks:
+  Bite (7): <(
+    # OW. adjacent
+    my ($self, $enemy) = @_;
+    my $damage = roll("10d3") + max(2, 5, 10);
+    $self->msg("[1P] teeth slice into [2], tearing away $damage HP! It's a mean bunny!", $self, $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+Symbol: White W
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  # We're simple. If we're adjacent, attack. If not, move towards the player.
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to Bite?
+  my $run = $self->g("TP") < $self->g("Attacks.Bite.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] panics at its lack of technique points, and begins to hop away.") if $run;
+    $self->msg("Evil intent returns to [1P] eyes. Aw, but it's such a cute bunny!", $self) unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance == 1) {
+    @results = $self->_attack("Bite", $Player);
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 17..23
+</>
+
+# Rank 1 (Tough)
+
+<new Monster>
+Name: GumbyBrain
+Desc: Whoa... it's the quote bot from the #perl IRC channel! Its physical
+      manifestation simply cannot be described.
+Str: 20..26
+Def: 20..24
+HP: 40..60
+TP: 18..24
+Rank: 1
+Attacks:
+  Quote (9): <(
+    # OW. 5 away.
+    my ($self, $enemy) = @_;
+    my $sy = $self->g("Y");
+    my $sx = $self->g("X");
+    my $py = $enemy->g("Y");
+    my $px = $enemy->g("X");
+    my $distance = abs($sy - $py) + abs($sx - $px);
+    my $damage = int(roll("3d10") / $distance * 2);
+    say chooserand(
+      "18:14 < GumbyBRAIN> In all the humps. You'll see its a monster.",
+      "17:57 < GumbyBRAIN> Having 2 sets of 4, we took 2 of the city line.",
+      "18:19 < merlyn> of course -- but you don't want to do that."
+    );
+    $self->msg("[1P] profound statement dazes you. Your karma -- er, HP is lowered by $damage", $self, $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+  MarkovChain (15): <(
+    my ($self, $enemy) = @_;
+    my $damage = max(2, 5, 10) * int(min(4, 5, 10) / 2);
+    $self->msg("[subj] whips you with a Markov Chain (literally), slicing away $damage HP.", $enemy);
+    $enemy->take_damage($damage);
+    return 1;
+  )>
+Symbol: yellow G
+Equipment:
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  # Enough TP to do anything?
+  my $run = $self->g("TP") < $self->g("Attacks.Quote.TP") ? 1 : 0;
+  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+    $self->msg("[subj] looks bored...") if $run;
+    $self->msg("[subj] looks more focused.") unless $run;
+    $self->{ModeRun} = $run;
+  }
+  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+  if ($run == 0 and $distance < 5) {
+    @results = $self->_attack("MarkovChain", $Player);
+  } else {
+    if ($run == 0 and percent(30)) {
+      @results = $self->_attack("Quote", $Player);
+      goto RESULTS;
+    }
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    # But if $run, go opposite.
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ($run) {
+        if ((!defined $far) or $ourdistance > $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      } else {
+        if ((!defined $far) or $ourdistance < $far) {
+          ($Y, $X) = ($y, $x);
+          $far = $ourdistance;
+        }
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 20..30
+</>
+
+<new Monster>
+Name: worry
+Desc: Why aren't your parents back yet? Why don't your friends reply? What
+      if...
+Str: 15..25
+Def: 17..23
+HP: 30..42
+TP: 15..25
+Rank: 1
+Attacks:
+  CrownofThorns (18): <(
+    # Places cursed item on player that deducts HP, steals helmet. adjacent.
+    # dies after.
+    my ($self, $enemy) = @_;
+    # First pwn helmet.
+    if (my $helmet = $enemy->g("Equipment.Helmet")) {
+      # Any helmets in EmotionRL yet? :P
+      $Game->{Silence} = 1;
+      # No curses, hahahaha!
+      $enemy->unequip($helmet);
+      $Game->{Silence} = 0;
+      $self->msg("[subj] incinerates your helmet with a mere glance.");
+      $helmet->destroy;
+    }
+    # Be merciless...
+    my $crown = $Game->{Content}{"crown of thorns"}->new;
+    $Game->{Silence} = 1;
+    $enemy->g("Inv")->add($crown);
+    $enemy->wear($crown);
+    $Game->{Silence} = 0;
+    $self->msg("[subj] mercilessly places a [1] upon [2P] head.", $crown, $enemy);
+    $self->msg("[1P] work here is complete...", $self);
+    $self->die(1);
+    return 1;
+  )>
+Symbol: Orange H
+Equipment: needle blade (Weapon)
+Behavior: <(
+  my $self = shift;
+  my ($energy, $action, @args, @results);
+  my $sy = $self->g("Y");
+  my $sx = $self->g("X");
+  my $py = $Player->g("Y");
+  my $px = $Player->g("X");
+  my $distance = abs($sy - $py) + abs($sx - $px);
+  if ($distance == 1) {
+    @results = $self->_attack("CrownofThorns", $Player);
+  } else {
+    # Get closer to the Player, somehow.
+    # For now... try... one-step A*! Of the 8 ways in which we could move,
+    # which'll take us closest to the player?
+    my $far;
+    my ($Y, $X);
+    foreach my $dir (1 .. 8) {
+      my $y = $self->g("Y");
+      my $x = $self->g("X");
+      $x-- if $dir == 1;
+      $x++ if $dir == 2;
+      $y-- if $dir == 3;
+      $y++ if $dir == 4;
+      $x--, $y-- if $dir == 5;
+      $x++, $y-- if $dir == 6;
+      $x--, $y++ if $dir == 7;
+      $x++, $y++ if $dir == 8;
+      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+      next if $self->g("Area.Map.$y.$x.Char");
+      my $ourdistance = abs($y - $py) + abs($x - $px);
+      if ((!defined $far) or $ourdistance < $far) {
+        ($Y, $X) = ($y, $x);
+        $far = $ourdistance;
+      }
+    }
+    if (defined $Y and defined $X) {
+      @results = $self->_go($Y, $X);
+    } else {
+      @results = $self->_idle;
+    }
+  }
+  RESULTS:
+  if (@results == 1) {
+    $energy = -1;
+  } else {
+    ($energy, $action, @args) = @results;
+  }
+  return ($energy, $action, @args);
+)>
+Exp: 30..50
+</>
+
+#<new Monster>
+#Name: pressure
+#Desc: Why is your best friend flirting with your girlfriend? Why does she
+#      encourage it? Why aren't you assertive? Ignore everything you believe in
+#      and start swinging, wimp!
+#Str: 10..19
+#Def: 20..30
+#HP: 40..55
+#TP: 10..20
+#Rank: 1
+#Attacks:
+#  Pressure (8): <(
+#    # After a few times, sends Player in a rage
+#    # no xp gained if killed whilst attacker is enraged.
+#    my ($self, $enemy) = @_;
+#    # Up the counter.
+#    $enemy->{Rage}++;
+#    return 1;
+#  )>
+#Symbol: blue r
+#Equipment:
+#Behavior: <(
+#  my $self = shift;
+#  my ($energy, $action, @args, @results);
+#  my $sy = $self->g("Y");
+#  my $sx = $self->g("X");
+#  my $py = $Player->g("Y");
+#  my $px = $Player->g("X");
+#  my $distance = abs($sy - $py) + abs($sx - $px);
+#  # Enough TP to do anything?
+#  my $run = $self->g("TP") < $self->g("Attacks.Pressure.TP") ? 1 : 0;
+#  if (defined $self->{ModeRun} and $self->g("ModeRun") != $run) {
+#    $self->msg("The force around [subj] seems lighter.") if $run;
+#    $self->msg("The aura enshrouding [subj] grows tenser.") unless $run;
+#    $self->{ModeRun} = $run;
+#  }
+#  $self->{ModeRun} = 0 unless defined $self->{ModeRun};
+#  if ($run == 0 and $distance < 5) {
+#    @results = $self->_attack("Pressure", $Player);
+#  } else {
+#    # Get closer to the Player, somehow.
+#    # For now... try... one-step A*! Of the 8 ways in which we could move,
+#    # which'll take us closest to the player?
+#    # But if $run, go opposite.
+#    my $far;
+#    my ($Y, $X);
+#    foreach my $dir (1 .. 8) {
+#      my $y = $self->g("Y");
+#      my $x = $self->g("X");
+#      $x-- if $dir == 1;
+#      $x++ if $dir == 2;
+#      $y-- if $dir == 3;
+#      $y++ if $dir == 4;
+#      $x--, $y-- if $dir == 5;
+#      $x++, $y-- if $dir == 6;
+#      $x--, $y++ if $dir == 7;
+#      $x++, $y++ if $dir == 8;
+#      next if $self->g("Area.Map.$y.$x._") ne "+" and $self->g("Area")->barrier($y, $x);
+#      next if $self->g("Area.Map.$y.$x.Char");
+#      my $ourdistance = abs($y - $py) + abs($x - $px);
+#      if ($run) {
+#        if ((!defined $far) or $ourdistance > $far) {
+#          ($Y, $X) = ($y, $x);
+#          $far = $ourdistance;
+#        }
+#      } else {
+#        if ((!defined $far) or $ourdistance < $far) {
+#          ($Y, $X) = ($y, $x);
+#          $far = $ourdistance;
+#        }
+#      }
+#    }
+#    if (defined $Y and defined $X) {
+#      @results = $self->_go($Y, $X);
+#    } else {
+#      @results = $self->_idle;
+#    }
+#  }
+#  RESULTS:
+#  if (@results == 1) {
+#    $energy = -1;
+#  } else {
+#    ($energy, $action, @args) = @results;
+#  }
+#  return ($energy, $action, @args);
+#)>
+#Exp: 40..52
+#</>

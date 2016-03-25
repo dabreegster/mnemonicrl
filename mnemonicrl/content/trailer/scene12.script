@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Heavy");
+GAME->{Map}->script("UbenSign");
+
+UI->{Main}{OffY} = 6;
+UI->{Main}{OffX} = 17;
+
+GAME->narrate(
+  [],
+  3.0,
+  sub {
+    GAME->{Map}->script("UbenSmokestacks");
+  },
+  0,
+  ["Uben?"],
+  3.5,
+  [],
+  1.0,
+  sub { exit }
+);

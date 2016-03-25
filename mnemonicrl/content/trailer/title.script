@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+
+GAME->narrate(
+  [],
+  0.2,
+  [-at => ["100% - 4", "center"], "Insert imagination to play"],
+  3.5,
+  [-at => ["100% - 4", "center"], "Open Beta, Coming Soon..."],
+  3.5,
+  [-at => ["100% - 4", "center"], "Not so much <white>vaporware<grey> as <Red>steamware<grey>..."],
+  3.5,
+  sub { exit }
+);

@@ -1,0 +1,92 @@
+# Rank is 2, for easy
+
+<new Food>
+Name: jawbreaker
+Desc: Jawbreakers are nasty candies that can be, er, licked for many hours
+      consecutively.
+Symbol: purple o
+{After, Character, eat, jawbreaker} (Static=1): <(
+  my $self = shift;
+  shift;
+  my $candy = shift;
+  $self->msg("[subj] gag on the [1]. She's been licking it for... 12 hours, now.", $candy);
+  return 1;
+)>
+Rank: 2
+</>
+
+<new Weapon>
+Name: incense
+# Weapon? Fine.
+Desc: A stick of incense! Mmm, frankincense and mir!
+Symbol: orange |
+Rank: 2
+Category: Miscellaneous
+Power: 1d1
+MaxMod: 0
+</>
+
+<new DisposableItem>
+Name: tarot card
+Desc: You're not superstitious or particularly into the occult or anything like
+      that, you simply enjoy the trippy art of Aleister Crowley. (Well, his
+      deck.)
+Symbol: Purple :
+Rank: 2
+{After, Character, read, tarot card} (Static=1): <(
+  my $self = shift;
+  my $effect = chooserand(1, 2, 3);
+  if ($effect == 1) {
+    $self->{HP} += random(5, 10);
+    $self->{HP} = $self->g("MaxHP") if $self->{HP} > $self->g("MaxHP");
+    $self->msg("[subj] recover.");
+  } elsif ($effect == 2) {
+    my $hp = int($self->{HP} / 2);
+    $self->{HP} = $hp;
+    $self->msg("[1P] health is halved!", $self);
+  } elsif ($effect == 3) {
+    # Teleport.
+    my ($y, $x);
+    while (1) {
+      $y = random(0, $self->g("Area")->height);
+      $x = random(0, $self->g("Area")->width);
+      last if $self->g("Area.Map.$y.$x._") eq "." and (!$self->g("Area.Map.$y.$x.Char"));
+    }
+    $self->go($y, $x);
+    $self->msg("[subj] [find] yourself in a completely new place!");
+  }
+  return 1;
+)>
+Category: Miscellaneous
+Readable: 1
+</>
+
+# Rank 0, uniques
+
+<new DisposableItem>
+Name: your heart
+Desc: It's caked with salt from its adventure in the ocean. It aches, yet it
+      pulses gently, almost seeming to yearn for more.
+Symbol: Red 8
+Rank: 0
+{Before, Player, drop, your heart} (Static=1): <(
+  # Are we at the sea or not?
+  if ($Player->tile->{_} eq "*") {
+    say "You give up your heart to the sea.";
+    say "An immense feeling washes over you.";
+    $Game->{UI}->msgrefresh;
+    select(undef, undef, undef, 0.5);
+    $Game->{UI}->msgbox(1,
+      "You toss it back into the sea, again."
+    );
+    $Game->{UI}->msgbox(1,
+      "Submerge."
+    );
+    $Player->exit(1);
+  } else {
+    say "You went through all this trouble to get your heart; you're not about to abandon it again!";
+    return -1;
+  }
+)>
+Category: Miscellaneous
+</>

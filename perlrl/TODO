@@ -1,0 +1,154 @@
+  - </> in color tags, handle it in the higher level Msg sayer or something.
+
+  - adjacnet tiles and other vector stuff is.. eh, needs to be in map info, so we can do
+    bounds checkin
+
+  - LOTS of toys.. trees, lamps, chandelier, fountain, literally anything i dont feel
+    replicating
+
+  - wall traps lag bad when there are lots.. hmm
+
+  - conveyor belt
+    - onscreen trigerring
+
+  - animated river
+    - spawning everywhere
+    - sometimes we have to move down/up
+    - direction switching and color
+  - animated fountains
+
+  - sign feature. maybe even cheesy animated
+
+
+  - need for multiple ID counters..
+  - clean _Data, watch what we store there. no objects.
+  - stairs.. test both modes, static and random maps.
+
+  - better FOV configuration, per map and per player...
+    - colored light
+      - animated/fading in and out all niftyily..
+    - static objects giving it off
+
+
+  - mapeditor
+    - spawn/feature broken
+    - stair editor
+  - tutorial level
+  - in singleplayer, death happens twice. in multiplayer, crashes :p
+  - flood flipped out in multiplayer? aargh
+
+
+  ** underwater / island
+  - snake that splits up where you hit it.. gotta force it to run into itsefl
+
+
+  - sort targetlist by distance? maybe
+  - server logging (but safe, in tmp!)
+  - dont be lazy about client message logging
+  - mrl_log is overwritten before a client stores it, oops :p
+  - away banner? :P server should log last few chats and send
+
+  - cyphen/uben switch quickly in standalone borks
+
+  - invmv and spawnstuff and all that should be autocalled when we make something in a
+    certain context...
+  - reorganize effects much more cleanly..
+  - the pre/before debate for east -> go
+  - put join/leave netcode in BDSM::Map's join/quit bit with a callback?
+  - nuke UI, PLAYER, GAME->server/client to see if stuff REALLY works :p
+  - the map hookshot draw stuff is in debate, try it with sprites and other stuff to see.
+    main issue is camera order, focus before draw
+  - turnbased/realtime overhaul, and lag() in both.
+  - SEVERE escape key lag.
+
+
+- start fixing major things
+  - content management, scripting, online editing..
+    - piecemeal cyphen objects..
+  - BDSM fixin
+    - layer system FTW
+
+- organize static content code better. scripts for cyphen-uben especially
+
+
+  - general idea from the mechanics separation.. still have actions go to the same place,
+    but maybe have an Item module that puts character code handling items all in the same
+    place.. task-oriented, not who-does-it-oriented
+
+
+  - finish turnbased system
+    - paralyed effect, firing weapon
+    - fix numbers
+    - a timeout
+
+  - homes (hotel!)
+    - choose top/bottom?
+    - when one is made, send new map to residents in there now
+  - doors (with real lighting)
+
+[bugs]
+ - in instructions, press key is now wrong ;)
+
+  - autoreconnect
+    - ... update the updater :P
+    - ship src with Curses.pm built with panels
+
+  - didnt fix targeting ;;
+
+  - fugly crap all in Sky.. you can get out of elevators, for one thing
+
+[features]
+  - collab exploration/adv/puzzle game, screw numbers
+
+  - start party code.. sharing experience, who's in, individ dungeons
+
+  - namebanner for damage
+
+  - monster behaviors
+
+  - dnd style RPs. partybased, events (monsters entering room, flooding)
+  - laggy players = AI
+
+[bdsm]
+- proper vectors finally?
+
+- blobs need much work. leaving a blob. callbacks not happening. etc
+  - efficient blob blitting.. blob moving vs something in blob moving
+  - move while train mooves, glitchy
+- Sprite warps in naughty ' ' places.. bugs in general
+- static should be called "Scenery"
+- rework entire blit override bit, combine all the BDSM things
+  - like, Animated uses floatingblit. ew!
+- how to move entire blob from within blob?
+- try colliding an agent INSIDE a sprite. chain pushing.
+- animated/sprite is a bad order!
+- sprites take up extra pad space!
+- a way to color sprites. use editor like for map?
+
+- std config for dungeon gen stuff
+
+- map editor improvements. region?
+
+- switch Blockmap back to exporting methods to Map; no multi-algorithm strategy pattern
+- Blockmap's backup and general strategy could use polish
+
+[obj / game]
+- blocking stairs.. monsters do it if you run. some sort of swap system?
+
+- dungeonspawner/joining causes lag cause server is in a tight loop. threads?
+
+- peoples accounts, savign stuff.. but first figure out modes of play
+- server generates a few maps when not loaded down (can do that for parties later)
+
+- AI stops chasing if you stay still for GiveUp seconds... cheating
+- cool explosions if rm dirs in adj_tiles for floodfillr
+- for now, attacking players is allowed by projectile since thats intended penalty..
+- identify system
+- anti cheating: check legal go() moves
+- universal turn counter, or else tracking nearest thing to ya is impossible
+- 3D dungeons
+  - light rendering; the code was screwing up other stuff so i nuked it
+  - bridges
+  - going up there / proper map structure
+  *** render with the new Z-layer system
+- mess with opengl again.. find a good menuing library. i mean.

@@ -1,0 +1,77 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Util;
+
+# Since it's easier to compare this way visually
+my @cols = (qw(Symbol Color Rank HP HP_Rate Def Dext Speed));
+my @table = (
+  #                                 1-10   1-15      1-5      1-15    1-10     1-5
+  # Name           Symbol  Color    Rank    HP     HP_Rate     Def    Dext    Speed
+  ["fridge",        "F",    "red",   1,     1,       1,         1,     2,       1],
+
+);
+my %attacks = (
+# Monster       Attack            Range   Lag  Damage     Effects
+fridge      => [["vodkabomb",      "adj",   3,   2,  Infatuate  => [15]                 ]]
+);
+
+# For extra non-tabular data
+my %dat = (
+  fridge => {
+    Name   => "mecha-fridge",
+    Descr  => "A little mini-fridge. \$10 per drink. And it's a combination microwave! OH THE HORROR!"
+  },
+);
+
+my @baddies;
+foreach my $entry (@table) {
+  my $type = shift @$entry;
+  unless ($dat{$type}) {
+    return "no monster data for $type";
+  }
+  $dat{$type}->{Type} = $type;
+
+  if (my $ls = $attacks{$type}) {
+    foreach my $dat (@$ls) {
+      my (%attack, @fx);
+      (@attack{qw(Name Range Lag DBase)}, @fx) = @$dat;
+      $attack{Range} = ["adj"] if $attack{Range} eq "adj";
+      $dat{$type}->{Attacks}{ $attack{Name} } = Game::Attack->new(%attack, @fx);
+    }
+  }
+
+  # Extra attack data
+  foreach my $atk (keys %{ $dat{$type} }) {
+    next unless $atk =~ s/^_//;
+    my %extra = %{ delete $dat{$type}->{"_$atk"} };
+    $dat{$type}->{Attacks}{$atk}{$_} = $extra{$_} foreach keys %extra;
+  }
+
+  for (0 .. $#cols) {
+    my $attrib = $cols[$_];
+    if ($attrib =~ m/(Symbol|Color|Speed|Rank)/) {
+      $dat{$type}->{$attrib} = $entry->[$_];
+    } else {
+      $dat{$type}->{Stats}{$attrib} = $entry->[$_];
+    }
+  }
+  push @baddies, delete $dat{$type};
+}
+if (%dat) {
+  return ["monster dat not in table", keys %dat];
+}
+
+# Finally, transform this monster data into real packages
+my @packages;
+foreach my $enemy (@baddies) {
+  my $type = delete $enemy->{Type};
+  my $package = "Game::Stuff::Monster::$type";
+  push @packages, $package;
+  eval "package $package; use parent 'Game::StdLib::Character::Monster';";
+  $package->announce($type);
+  $package->classdat(%$enemy);
+}
+
+@packages;

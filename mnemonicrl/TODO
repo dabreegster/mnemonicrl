@@ -1,0 +1,75 @@
+# SUMMER #
+1) finish guest pacing behavior, maybe make them go to their rooms at night
+2) night lighting / FOV / method of loci / colored scents
+3) gameplay editor for others
+4) trailer
+
+  - whats keyboard for?
+  - make a timetable...
+  - garden
+  - observatory
+  - heap & stack floor
+  - forky floor
+  - basement
+  - staff_room
+  - flesh out artist who glimpses the new color. little kid
+    - mementos: half eaten cookie (vending), comfort blanket (laundry), teddy bear
+      (giftshop), coloring book (false, room),
+    - room on Self floor. "i'm missing my Franky?" like its a dog
+    - staff: tries to ask about dog, they 'escort' out
+    - waiter brings food (animal crackers), he eats in garden
+    - giftshop: "i know that bear!"
+    - pool: tries to sketch in the water, but it wont stay..
+   
+    - turning point: gypsy says "you can find franky in the same way as you first did."
+      if enough memories, get the flashback of getting struck in field
+
+    - how to attract lightning?
+    - death: observatory tower
+
+  - mechanics and editor, for others who want to develop.
+
+
+
+- map editor
+    - show all tiles with a certain feature.. highlight them!
+    - mouse controls plox
+- bell on lobby desk
+- atrium:
+  - waterfall stairs
+  - chandeliers
+
+- brain stream of conciousness snakes..
+  - split when hit
+  - goal is to trap or herd them
+
+
+
+- alchemist's flood has a flaw.. you can step out of it, but it still marks you.
+- fix all scripts
+- green clockface?
+- dont cheat at river.. no fakeflood, real layers
+- window changing needs to do 21st window last
+- entrances to buildings
+- make layers so i can move
+- better gears on alt.ascii-art
+- trolley in cyphen, but hafta space things out
+- large snowflakes
+- name the thoughttrain
+- potential bad overlap with quick transitions as far as timed events river/windows
+- synchronize flooding and stuff..
+- quotes from story -> game
+- snow on aether plains?
+
+
+  - underwater/island
+    - flooding puzzles, snake, attacks make it bificurate, goal is to trap it.
+  - brain
+    - herding puzzle
+      - words are everywhere, gotta descramble
+      - attacks will scare em and so will your presence
+      - influence map, they climb up gradient
+    - your movement is recorded, creates the neural network
+  - SOMETHING with rotating chunks
+  - UT campus remake, eventually.
+

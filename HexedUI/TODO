@@ -1,0 +1,46 @@
+- docs
+- release
+
+  - Form should be able to space better
+  - popup cut off my shit!! freehand mode msg in map editor
+  - table pad to max len of win? how to stretch? percentages?
+  - per app keymap and stuff
+  - factor out search, highlight
+  - util::hook cant help ui keymaps, those're a queue
+
+
+- hexed::map's target needs to say 'press _ to loop thru' but where? how does it know that
+  exists in the UI?
+- i've simplified roll's input
+- resizing is wonky
+** i want custom keyhandler in tmp choose!
+- document flags for stuff, especially tmp popup/choose/askfor
+- JMD keymap needs to work different now.. but when does <ENTER> mean ok and when
+  change_song? what mode?
+
+
+- resizing is ENTIRELY buggy
+- cant use some keys well in searching/popups, etc. want to scroll!
+- leading whitespace (or any?) and color tags screw up in wrap
+- wheres keymap go?
+- temporary stuff still gets a bit clobbered on resize
+- call main->draw better.. frames per second thing on animated places? names = slow
+- define automatic window behavior (like switching between "tabs" each with their own
+  keymap... so switch between game, chat, popups.. move em, type, whatever)
+- cant have "custom keys" in choose()
+- HexedUI's _stop  calls "clear" command nonportably
+- ^C causes asap shutdown.. shouldnt it trigger stop or something?
+- scrolling menu horiz
+- snow
+  - multi-tile snowflakes
+  - 'wind' by nuking choosernd(-1, 1) in snowspawn
+  - snow bug when ya go -----> screen edge. tmp fix is ugly
+  - camera offsets are dependent on screen size, and snow chokes on weird camera
+- easier movie mode.. please
+  - setting up stuff with a movie editor.. camera, a timer
+  - diagonal camera moves
+  - auto camera (tell it where it needs to be by when.., it figures otu rate!)
+  - editor with side pane of objects/camera/stuff that can be selected and edited
+  - camera.. tell it to start a dir, it goes smoothly, press a key to change direction
+- menu selection. like skipping certain items, highlighting all of them.
+- scrolling ticker

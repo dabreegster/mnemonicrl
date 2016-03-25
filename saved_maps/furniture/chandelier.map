@@ -1,0 +1,32 @@
+LAYER1
+                   
+                   
+                   
+                   
+                   
+                   
+LAYER2
+    *   *   *      
+    |   |   |     *
+ *..'''''''''''.*.|
+'|   *  *\ /*   | '
+'... |  |/`\|  ...'
+    '''''''''''    
+LAYER3
+,,,,Red,,,,Red,,,,Red,,,,,,,
+,,,,white,,,,white,,,,grey,,,,,,Red,
+,Red,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,Red,grey,white,
+grey,white,,,,Red,,,Red,Black,,Black,Red,,,,white,,grey,
+grey,grey,grey,grey,,white,,,white,Black,orange,Black,white,,,grey,grey,grey,grey,
+,,,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,,,,
+LAYER4
+$VAR1 = {
+  _Data => {
+    superlight => 1,
+    Effects => {},
+    Toys => [
+    ],
+    MkStairs => [
+    ]
+  }
+};

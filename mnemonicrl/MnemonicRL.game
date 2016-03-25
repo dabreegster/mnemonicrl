@@ -1,0 +1,25 @@
+{
+  Classes  => ["Adventurer", "Alchemist", "Artist", "Historian", "MadScientist",
+               "Musician", "Steamist", "Villain"
+              ],
+  Items    => ["content/game/Weapons", "content/game/Items", "content/game/Masks"],
+  Monsters => ["content/game/Monsters"],
+  Setup    => sub {
+    my $all = 1;
+    log_push("Building maps... All? $all");
+
+    GAME->addlvl("content/cyphen.map");
+    if ($all) {
+      GAME->addlvl($_) for 1 .. 1;  # So we can do the special stairs
+      GAME->addlvl(AetherPlains => BDSM::DunGen::Sky->generate(1, 1));
+      GAME->addlvl(Bldg => BDSM::DunGen::Building->generate(100, 50));
+      GAME->addlvl(Cave => BDSM::DunGen::Cave->generate(100, 75));
+    }
+
+    GAME->addlvl(Test => BDSM::DunGen::Test->generate(90, 120));
+    GAME->{Levels}{Cyphen}->stair(80, 102, "Test", 1, 1);
+
+    GAME->{Levels}{Start} = GAME->{Levels}{Cyphen};
+    log_pop("Done pregenerating maps");
+  }
+}

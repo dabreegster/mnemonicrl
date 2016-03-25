@@ -1,0 +1,79 @@
+#!/usr/bin/perl
+___SCRIPT Movie___
+my $map = shift;
+CFG->set("Snow" => "Light");
+
+my $train = GAME->{Templates}{Blob}->new(Map => $map, At => [106, 0], FloatingBlit => 1);
+my $trainsprite = GAME->{Templates}{Sprite}->new(
+  Shapes => { default => '
+                                                          .-.       
+                                 .-----.    _      .-.    [*]       
+                                  `--.*|""""*""""""***""""***".     
+                                  ___]*|-:--:--:--:--:--:--:--:(    
+     /----------------------\|\'=\'|*[_9_[*:**:**:**:**:**:*****|     
+     |-.___.--.___.--.___.--\'|___|___________________________.|\    
+     \'-\-.-/==\-.-/==\-.-/--\'/   |*_.--.______.--.______.--._||*\   
+        (o)    (o)    (o)           (==)      (==)      (==)=^;__\* 
+  '},
+  Color => "red",
+  FloatingBlit => 1,
+  Render => {
+    "*" => " "
+  }
+);
+$train->omnomnom($trainsprite, 7, 0);
+my $smoke = GAME->{Templates}{Sprite}->new(
+  Shapes => { default => '
+              (@@@@@)     (@@@)                                     
+  (@@@@@@@)        (@@@@@@@)     (@@)                               
+    (@@@@@@@@@@@)       (@@@@@)   (@@@@@@@)                         
+(@@@)             (@@@@@@)   (@@@@@@@)     (@@@)                    
+              (@)                (@@@@@@)    (@@@@@@)               
+                             (@@)           (@@@@)  (@@@)           
+                                     (@@@)              (@@)        
+  '},
+  Color => "grey",
+  FloatingBlit => 1
+);
+$train->omnomnom($smoke, 0, 0);
+GAME->{Player} = GAME->{Templates}{Player}->new;
+$train->omnomnom(Player, 11, 20);
+UI->{Main}->focus(Player);
+
+$train->{Methods}{intro} = sub {
+  my $self = shift;
+  if ($self->{X} == 79) {
+    $train->jailbreak($smoke);
+    $train->jailbreak(Player, 115, 99);
+    UI->{Main}->focus(Player, 0, 0);
+    Player->trekpath("content/trailer/scene1.path");
+    return "STOP";
+  }
+  $train->e;
+ return 0.01;
+};
+$train->schedule(-do => "intro", -id => "move", -tags => ["map"]);
+
+GAME->narrate(
+  [],
+  0.5,
+  ["Welcome to Cyphen, the Land of Nowhere"],
+  3.5,
+  ["Ground you claim with your eyes will be taxed, so heads up..."],
+  3.0,
+  [],
+  3.5,
+  ["This is a Purgatory where you must wait for your identity,",
+  "so better make up a new one, for the meantime..."],
+  5.0,
+  [],
+  6.0,
+  ["So, go explore your new home,",
+    "whatever it's called"],
+  3.0,
+  [],
+  6.5,
+  sub {
+    exit;
+  }
+);

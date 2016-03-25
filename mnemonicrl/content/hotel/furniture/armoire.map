@@ -1,0 +1,45 @@
+LAYER1
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+LAYER2
+ ____________ 
+| __________ |
+||    ||    ||
+||    ||    ||
+||   8||8   ||
+||    ||    ||
+||____||____||
+|============|
+|[_oo_][_oo_]|
+|[_oo_][_oo_]|
+|============|
+'============'
+LAYER3
+,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,
+grey,,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,,grey,
+grey,grey,,,,,grey,grey,,,,,grey,grey,
+grey,grey,,,,,grey,grey,,,,,grey,grey,
+grey,grey,,,,grey,grey,grey,grey,,,,grey,grey,
+grey,grey,,,,,grey,grey,,,,,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,grey,
+LAYER4
+$VAR1 = {
+          '_Data' => {
+                       'MkStairs' => undef
+                     }
+        };

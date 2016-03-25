@@ -1,0 +1,62 @@
+# Define your keys here, the format is self-explanatory.
+# Strange keys are given by whatever Curses thinks they are; see unctrl(3)
+# TODO: Explain the available commands for each section
+
+[Commands]
+# Movement
+# Commands are the abbreviation for each cardinal direction and diagonal.
+# So you can choose from: n, s, e, w, nw, ne, sw, se
+h           = w
+j           = s
+k           = n
+l           = e
+y           = nw
+u           = ne
+b           = sw
+n           = se
+<KEY_UP>    = n
+<KEY_DOWN>  = s
+<KEY_LEFT>  = w
+<KEY_RIGHT> = e
+4           = w
+6           = e
+8           = n
+2           = s
+7           = nw
+9           = ne
+1           = sw
+3           = se
+<           = changedepth
+>           = changedepth
+
+# Items
+# The 'use' command will change soon; for now, it lets you eat/quaff/read the appropriate
+# types of items.
+;           = lstile explicit
+,           = take
+g           = take
+i           = inv
+d           = drop
+w           = wield
+W           = wear
+T           = takeoff
+'           = quickwield
+e           = use
+            = interact
+
+# Misc
+<^P>        = msglog
+f           = fire
+F           = defaultrange
+x           = explore
+a           = ability
+?           = help
+A           = defaultclose
+/           = lswho
+-           = journal
+
+# Developer/wizard commands
+# Use at your own risk
+@           = devmode
+O           = autoexplore
+5           = heal
